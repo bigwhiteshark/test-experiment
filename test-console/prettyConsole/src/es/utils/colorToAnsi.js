@@ -1,0 +1,54 @@
+const o = {
+  black: 30,
+  red: 31,
+  green: 32,
+  yellow: 33,
+  blue: 34,
+  magenta: 35,
+  cyan: 36,
+  white: 37,
+  grey: 90,
+  redBright: 91,
+  greenBright: 92,
+  yellowBright: 93,
+  blueBright: 94,
+  magentaBright: 95,
+  cyanBright: 96,
+  whiteBright: 97
+}, s = (t, n, r) => t === n && n === r ? t < 8 ? 16 : t > 248 ? 231 : Math.round((t - 8) / 247 * 24) + 232 : 16 + 36 * Math.round(t / 255 * 5) + 6 * Math.round(n / 255 * 5) + Math.round(r / 255 * 5), f = (t) => {
+  if (t < 8)
+    return 30 + t;
+  if (t < 16)
+    return 90 + (t - 8);
+  let n, r, e;
+  if (t >= 232)
+    n = ((t - 232) * 10 + 8) / 255, r = n, e = n;
+  else {
+    t -= 16;
+    const l = t % 36;
+    n = Math.floor(t / 36) / 5, r = Math.floor(l / 6) / 5, e = l % 6 / 5;
+  }
+  const a = Math.max(n, r, e) * 2;
+  if (a === 0)
+    return 30;
+  let i = 30 + (Math.round(e) << 2 | Math.round(r) << 1 | Math.round(n));
+  return a === 2 && (i += 60), i;
+}, h = (t) => {
+  const n = [];
+  if (t.length < 5)
+    for (let r = 1; r < t.length; r++)
+      n.push(parseInt("0x" + t[r] + t[r]));
+  else
+    for (let r = 1; r < 7; r += 2)
+      n.push(parseInt("0x" + t[r] + t[r + 1]));
+  return n;
+}, g = (t, n = !1) => {
+  const r = n ? 10 : 0;
+  if (t = t.trim(), o[t])
+    return o[t] + r;
+  let e = 0, a = 0, i = 0;
+  return /^rgb.*\)$/.test(t) ? [e, a, i] = t.match(/\((.*?)\)/)[1].split(",").map((u) => parseInt(u)) : /^#[0-9a-fA-F]{3}|^#[0-9a-fA-F]{6}|^#[0-9a-fA-F]{8}/.test(t) && ([e, a, i] = h(t)), f(s(e, a, i)) + r;
+};
+export {
+  g as default
+};
