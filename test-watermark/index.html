@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="./data.js"></script>
+  <script src="./watermark.js"></script>
+  <style>
+    .content {
+      display: flex;
+      gap: 16px;
+    }
+
+    .content .img {
+      border: 1px solid red;
+    }
+
+    img {}
+  </style>
+</head>
+
+<body>
+  <div class="content">
+    <div class="img">
+      <img id="origin" alt="">
+    </div>
+    <div class="img">
+      <img id="edit" alt="">
+    </div>
+  </div>
+</body>
+<script>
+
+  window.addEventListener('DOMContentLoaded', async () => {
+    const origin = document.getElementById('origin')
+    const edit = document.getElementById('edit')
+    const watermarkData = {
+      text: '水印测试',
+      font: '16px sans-serif',
+      color: 'blue',
+      alpha: 0.9,
+    }
+    const imgUrl = await watermark(imgBase64, watermarkData)
+    origin.src = imgBase64
+    edit.src = imgUrl
+
+
+  })
+</script>
+
+</html>
