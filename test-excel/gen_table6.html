@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      border: 1px solid black;
+    }
+
+    td {
+      border: 1px solid black;
+      min-width: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <script>
+    const removeEmptyColumns = (data) => {
+      // 找出所有列全为空的索引
+      const emptyColumnIndexes = [];
+      data[0].forEach((_, columnIndex) => {
+        if (data.every((row) => row[columnIndex] === "")) {
+          emptyColumnIndexes.push(columnIndex);
+        }
+      });
+
+      // 去除所有列全为空的数据
+      const result = data.map((row) =>
+        row.filter((_, columnIndex) => !emptyColumnIndexes.includes(columnIndex))
+      );
+
+      return result;
+    };
+    function removeSurroundingDelimiters(str, delimiter) {
+      return str.replace(new RegExp('^\\' + delimiter + '(.*)\\' + delimiter + '$'), '$1');
+    }
+    function arrayToTable(tableData) {
+      const tableHtml = [];
+      tableHtml.push("<table>");
+      for (let i = 0; i < tableData.length; i++) {
+        tableHtml.push("<tr>");
+        for (let j = 0; j < tableData[i].length; j++) {
+          const cell = tableData[i][j] || ''
+          const remainCol = tableData[i].slice(j + 1)
+          console.log('remainCol', remainCol)
+          let colSpan = '0'
+          if (!remainCol.join('')) {
+            colSpan = remainCol.length + 1
+          }
+          if (cell) {
+            tableHtml.push(
+              "<td colspan='" + colSpan + "' class='td-cell'>" + cell + "</td>"
+            );
+          }
+        }
+        tableHtml.push("</tr>");
+      }
+      tableHtml.push("</table>");
+      return tableHtml.join("");
+    }
+    function generateHTMLTable(data) {
+      let tableData = []
+      // Split data into rows based on newline characters
+      let rows = data.split('\n');
+
+      // Initialize variables to track table creation
+      let maxColumns = 0;
+
+      // Process each row to determine maximum number of columns
+      rows.forEach(row => {
+        let cells = row.split('|'); // Split by '|' and remove empty cells
+        if (cells.length > maxColumns) {
+          maxColumns = cells.length;
+        }
+      });
+      // console.log(rows, maxColumns, 'maxColumns')
+
+      rows.forEach(row => {
+        row = removeSurroundingDelimiters(row, '|')
+        // console.log(row)
+        let cells = row.split('|'); // Split by '|' and remove empty cells
+
+        if (cells.length > 0 && cells.join('')) {
+          let tdData = []
+          cells.forEach((cell, i) => {
+            //接口返回的空数据设置为空格
+            tdData.push(cell.trim() || ' ')
+          });
+
+          // If row has fewer columns than maxColumns, add empty cells to match maxColumns
+          if (cells.length < maxColumns) {
+            for (let i = cells.length; i < maxColumns; i++) {
+              //后补的数据表格为空
+              tdData.push('')
+            }
+          }
+
+          tableData.push(tdData);
+        }
+      });
+
+      tableData = removeEmptyColumns(tableData)
+      // console.log(tableData)
+      let tableHtml = arrayToTable(tableData)
+      return tableHtml;
+    }
+
+    // Example usage:
+    let data = "|公司名称|上海东满进出口有限公司|\n|公司注册地|中国（上海）自由贸易试验区泰谷路169号A楼605室|\n|营业执照编号|41000000201510210177|\n|视频号昵称|逸美红酒|视频号id|逸美红酒|\n|法人姓名|童连锁|法人身份证号|140102196304124819|\n|法人联系电话|13916211223|法人联系邮箱|dstephen@domen.com.cn|\n|账号运营者姓名|陈健将|账号运营者身份证号|36020219920416301X|\n|运营者联系电话|18001940707|运营者联系邮箱|1067220390@qq.com|\n|若主播与运营者不一致，请填写主播信息，多个主播需要填写多条|\n|主播姓名|陈健将|主播身份证号|36020219920416301X|\n|主播昵称|逸美红酒|主播联系方式|18001940707|\n|主播姓名| |主播身份证号| |\n|主播昵称| |主播联系方式| |";
+    // let data = "||营业收入|营业成本|毛利率|营业收入比上年同期增减|营业成本比上年同期增减|毛利率比上年同期增减|\n|分行业|||||||\n|网络设备制造|108,807,882.41|94,980,553.05|12.71%|3.42%|11.27%|-6.16%|\n|物联网应用及技术服务|80,826,540.03|60,786,852.11|24.79%|0.82%|11.83%|-7.41%|\n|分产品|||||||\n|网络传输系统|110,941,034.08|96,028,236.70|13.44%|4.41%|11.68%|-5.64%|\n|智慧物联应用|68,192,595.65|47,055,056.10|31.00%|-7.38%|12.21%|-12.04%|\n|分地区|||||||\n|华东|116,426,870.40|93,833,944.24|19.41%|2.11%|5.89%|-2.88%|\n|华中|28,886,413.92|28,682,891.22|0.70%|146.38%|151.69%|-2.10%|\n|分销售模式|||||||\n|直销|192,260,289.14|157,458,849.54|18.10%|2.29%|11.32%|-6.64%|";
+
+    // let data = "|项目名称||售楼部电话||||\n|项目| |所属片区||项目地址||\n|物业类型||||||\n|位置交通配套|公共交通|||||\n|||距交通主干道距离||||\n||五百米内市政、生活配套|||||\n|基本情况|占地面积||总建筑面积||总户数||\n||容积率||绿化率||车位||\n||楼栋数||在售规模||||\n|户型分布|户型|面积|规格|套数|比例|\n||||||||\n|||||||\n|||||||\n|价格|五证||层高||交房标准|\n|建筑结构||电梯||外立面||\n|小区配套|最高价||均价|||\n|起价 开盘日期||促销活动||||\n|成交客户||销售率||||\n|相关公司|开发商||代理商||物业公司|\n|物业管理费||交房时间||工程进度||\n|优劣势||||||\n|||||||"
+
+    let tableHtml = generateHTMLTable(data);
+    document.body.innerHTML = tableHtml
+  </script>
+</body>
+
+</html>

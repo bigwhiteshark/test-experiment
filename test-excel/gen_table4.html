@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      border: 1px solid black;
+    }
+
+    td {
+      border: 1px solid black;
+      min-width: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <script>
+    function removeSurroundingDelimiters(str, delimiter) {
+      return str.replace(new RegExp('^\\' + delimiter + '(.*)\\' + delimiter + '$'), '$1');
+    }
+    function generateDynamicHTMLTable(data) {
+      // Split data into rows based on newline characters
+      let rows = data.split('\n');
+
+      // Initialize variables to track table creation
+      let table = document.createElement('table');
+      let maxColumns = 0;
+
+      // Process each row to determine maximum number of columns
+      rows.forEach(row => {
+        let cells = row.split('|').filter(cell => cell.trim() !== ''); // Split by '|' and remove empty cells
+        if (cells.length > maxColumns) {
+          maxColumns = cells.length;
+        }
+      });
+      // console.log(rows, maxColumns, 'maxColumns')
+
+      // Build the table
+      rows.forEach(row => {
+        row = removeSurroundingDelimiters(row, '|')
+        //console.log(row)
+        let cells = row.split('|'); // Split by '|' and remove empty cells
+        if (cells.length > 0) {
+          let tr = document.createElement('tr');
+          cells.forEach(cell => {
+            let td = document.createElement('td');
+            td.textContent = cell.trim();
+            tr.appendChild(td);
+          });
+
+          // If row has fewer columns than maxColumns, add empty cells to match maxColumns
+          if (cells.length < maxColumns) {
+            for (let i = cells.length; i < maxColumns; i++) {
+              let td = document.createElement('td');
+              tr.appendChild(td);
+            }
+          }
+
+          table.appendChild(tr);
+        }
+      });
+
+      return table;
+    }
+
+    // Example usage:
+    let data = "|公司名称|上海东满进出口有限公司|\n|公司注册地|中国（上海）自由贸易试验区泰谷路169号A楼605室|\n|营业执照编号|41000000201510210177|\n|视频号昵称|逸美红酒|视频号id|逸美红酒|\n|法人姓名|童连锁|法人身份证号|140102196304124819|\n|法人联系电话|13916211223|法人联系邮箱|dstephen@domen.com.cn|\n|账号运营者姓名|陈健将|账号运营者身份证号|36020219920416301X|\n|运营者联系电话|18001940707|运营者联系邮箱|1067220390@qq.com|\n|若主播与运营者不一致，请填写主播信息，多个主播需要填写多条|\n|主播姓名|陈健将|主播身份证号|36020219920416301X|\n|主播昵称|逸美红酒|主播联系方式|18001940707|\n|主播姓名| |主播身份证号| |\n|主播昵称| |主播联系方式| |";
+
+    let finalTable = generateDynamicHTMLTable(data);
+    document.body.appendChild(finalTable);
+  </script>
+</body>
+
+</html>

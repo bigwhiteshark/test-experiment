@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      border: 1px solid black;
+    }
+
+    td {
+      border: 1px solid black;
+      min-width: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <script>
+    function generateHTMLTable(data) {
+      // 将字符按行拆分
+      let rows = data.split('\n');
+
+      // 创建表格元素
+      let table = document.createElement('table');
+
+      // 遍历每一行数据
+      rows.forEach(row => {
+        // 创建表格行
+        let tr = document.createElement('tr');
+
+        // 将每一行数据按 "|" 分割成单元格数据
+        let cells = row.split('|');
+
+        // 遍历每一个单元格数据
+        cells.forEach(cell => {
+          // 创建单元格元素
+          let td = document.createElement('td');
+          // 设置单元格内容
+          td.textContent = cell.trim();
+          // 将单元格添加到表格行中
+          tr.appendChild(td);
+        });
+
+        // 将表格行添加到表格中
+        table.appendChild(tr);
+      });
+
+      // 返回生成的表格
+      return table;
+    }
+
+    // 示例用法
+    let data = "|公司名称|上海东满进出口有限公司|\n|公司注册地|中国（上海）自由贸易试验区泰谷路169号A楼605室|\n|营业执照编号|41000000201510210177|\n|视频号昵称|逸美红酒|视频号id|逸美红酒|\n|法人姓名|童连锁|法人身份证号|140102196304124819|\n|法人联系电话|13916211223|法人联系邮箱|dstephen@domen.com.cn|\n|账号运营者姓名|陈健将|账号运营者身份证号|36020219920416301X|\n|运营者联系电话|18001940707|运营者联系邮箱|1067220390@qq.com|\n|若主播与运营者不一致，请填写主播信息，多个主播需要填写多条|\n|主播姓名|陈健将|主播身份证号|36020219920416301X|\n|主播昵称|逸美红酒|主播联系方式|18001940707|\n|主播姓名| |主播身份证号| |\n|主播昵称| |主播联系方式| |";
+    let table = generateHTMLTable(data);
+    document.body.appendChild(table);
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>生成excel</title>
+
+</head>
+
+<body>
+  <script type="module">
+    // @deno-types="https://unpkg.com/xlsx/types/index.d.ts"
+    import * as XLSX from 'https://unpkg.com/xlsx/xlsx.mjs';
+
+    /* load the codepage support library for extended support with older formats  */
+    import * as cptable from 'https://unpkg.com/xlsx/dist/cpexcel.full.mjs';
+    XLSX.set_cptable(cptable);
+    document.getElementById("xport").addEventListener("click", function () {
+      let wb = XLSX.utils.book_new();
+      let ws = XLSX.utils.aoa_to_sheet([
+        ['A', 'B', 'C'],
+        ['foo', 'bar', 'baz'],
+        ['foo2', 'bar2', 'baz2'],
+      ]);
+      // 将图表添加到工作表中 
+      
+      XLSX.utils.book_append_sheet(wb, ws, 'test');
+      XLSX.writeFile(wb, 'test.xlsx');
+    })
+  </script>
+  <button id="xport">生成excel</button>
+</body>
+
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>生成excel</title>
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+
+</head>
+
+<body>
+  <script type="module">
+    // @deno-types="https://unpkg.com/xlsx/types/index.d.ts"
+    import * as XLSX from 'https://unpkg.com/xlsx/xlsx.mjs';
+
+    /* load the codepage support library for extended support with older formats  */
+    import * as cptable from 'https://unpkg.com/xlsx/dist/cpexcel.full.mjs';
+    XLSX.set_cptable(cptable);
+    document.getElementById("xport").addEventListener("click", function () {
+      let wb = XLSX.utils.book_new();
+      let ws = XLSX.utils.aoa_to_sheet([
+        ['A', 'B', 'C'],
+        ['foo', 'bar', 'baz'],
+        ['foo2', 'bar2', 'baz2'],
+      ]);
+      // 将图表添加到工作表中 
+
+      var chart = {
+        type: 'bar',
+        data: {
+          labels: ['John', 'Jane', 'Bob'],
+          datasets: [{ label: 'Score', data: [80, 90, 70] }]
+        }
+      };
+      // 将柱状图添加到工作表中 
+      XLSX.utils.book_append_sheet(wb, ws, 'test');
+      console.log(XLSX);
+      // XLSX.utils.sheet_add_chart(ws, chart, 'A4');
+
+      XLSX.writeFile(wb, 'test.xlsx');
+    })
+
+    document.getElementById("xchart").addEventListener("click", function () {
+      /**
+     * 点击按钮时触发创建柱状图的功能
+     */
+      function createBarChart() {
+        Excel.run(async (context) => {
+          // 获取活动工作簿和工作表
+          const workbook = context.workbook;
+          const sheet = workbook.worksheets.getActiveWorksheet();
+
+          // 指定图表的数据范围
+          const chartDataRange = sheet.getRange("A1:B10"); // 假设数据在A1到B10
+
+          // 创建柱状图
+          const chart = sheet.charts.add(Excel.ChartType.columnClustered, chartDataRange, Excel.ChartSeriesBy.rows);
+
+          // 设置图表样式
+          chart.name = "MyBarChart";
+          chart.title.text = "Monthly Sales Data";
+          chart.title.format.textOrientation = 0; // 垂直文本
+
+          // 设置图表的轴标题
+          chart.axes.categoryAxis.title.text = "Month";
+          chart.axes.seriesAxis.title.text = "Sales (in units)";
+
+          // 调整图表大小和位置
+          chart.width = 500;
+          chart.height = 300;
+          chart.top = 50;
+          chart.left = 50;
+
+          // 保存并应用更改
+          await context.sync();
+        });
+      }
+    })
+
+  </script>
+  <button id="xport">生成excel</button>
+  <button id="xchart">生成chart</button>
+</body>
+
+</html>

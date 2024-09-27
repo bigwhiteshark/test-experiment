@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Save Test</title>
+  <script>
+    function save(filename, data) {
+      var ua = window.navigator.userAgent.toLowerCase();
+      //alert(ua);
+      var version = (ua.match(/.+(?:rv|it|ra|ie)[\/: ]([\d.]+)/) || [])[1];
+
+      if (ua.indexOf("edge") > -1 || (ua.indexOf("msie") == -1 && version == '11.0') || (ua.indexOf("msie") > -1 && version == '10.0')) {
+        window.navigator.msSaveOrOpenBlob(new Blob([data]), filename);
+        return;
+      }
+      // for IE9-
+      if (ua.indexOf("msie") > -1 && (version == '9.0' || version == '8.0')) {
+        var frame = document.createElement("iframe");
+        if (frame) {
+          document.body.appendChild(frame);
+          frame.setAttribute("style", "display:none");
+          frame.contentWindow.document.open("txt/html", "replace");
+
+          frame.contentWindow.document.write(data);
+          frame.contentWindow.document.close();
+          frame.focus();
+          frame.contentWindow.document.execCommand("SaveAs", true,
+            filename);
+          document.body.removeChild(frame);
+        }
+      } else if (ua.indexOf('firefox') > -1 || ua.indexOf('chrome') > -1) {
+        var blob = new Blob([data]);
+        var link = document.getElementsByTagName('a')[0];
+        link.download = filename;
+        var url = URL.createObjectURL(blob);
+        link.href = url;
+        //URL.revokeObjectURL(url);
+      }
+    }
+
+
+    window.onload = function () {
+      var data = 'hello world!';
+      save('file.txt', data);
+    }
+  </script>
+</head>
+
+<body>
+  <a>Save</a>
+</body>
+
+</html>

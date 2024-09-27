@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=<code class=" language-javascript"><span class="hljs-comment">//
+    创建工作簿[对象](https://geek.csdn.net/educolumn/04c51611e4b730957464192e0307b82c?spm=1055.2569.3001.10083)</span>
+  <span class="hljs-keyword">var</span> workbook = XLSX.utils.<span
+    class="hljs-title function_ invoke__">book_new</span>();
+
+  <span class="hljs-comment">// 创建工作表</span>
+  <span class="hljs-keyword">var</span> worksheet = XLSX.utils.<span
+    class="hljs-title function_ invoke__">json_to_sheet</span>([
+  { <span class="hljs-attr">name</span>: <span class="hljs-string">'John'</span>, <span class="hljs-attr">score</span>:
+  <span class="hljs-number">80</span> },
+  { <span class="hljs-attr">name</span>: <span class="hljs-string">'Jane'</span>, <span class="hljs-attr">score</span>:
+  <span class="hljs-number">90</span> },
+  { <span class="hljs-attr">name</span>: <span class="hljs-string">'Bob'</span>, <span class="hljs-attr">score</span>:
+  <span class="hljs-number">70</span> }
+  ]);
+
+  <span class="hljs-comment">// 创建柱状图</span>
+  <span class="hljs-keyword">var</span> chart = {
+  type: <span class="hljs-string">'bar'</span>,
+  data: {
+  labels: [<span class="hljs-string">'John'</span>, <span class="hljs-string">'Jane'</span>, <span
+    class="hljs-string">'Bob'</span>],
+  datasets: [{
+  label: <span class="hljs-string">'Score'</span>,
+  data: [<span class="hljs-number">80</span>, <span class="hljs-number">90</span>, <span class="hljs-number">70</span>]
+  }]
+  }
+  };
+
+  <span class="hljs-comment">// 将柱状图添加到工作表中</span>
+  XLSX.utils.<span class="hljs-title function_ invoke__">book_append_sheet</span>(workbook, worksheet, <span
+    class="hljs-string">'Sheet1'</span>);
+  XLSX.utils.<span class="hljs-title function_ invoke__">sheet_add_chart</span>(worksheet, chart, <span
+    class="hljs-string">'A4'</span>);
+
+  <span class="hljs-comment">//
+    导出工作簿[对象](https://geek.csdn.net/educolumn/04c51611e4b730957464192e0307b82c?spm=1055.2569.3001.10083)为.xlsx文件</span>
+  XLSX.<span class="hljs-title function_ invoke__">writeFile</span>(workbook, <span class="hljs-string">'output.x
+  </span><button class="copy-btn">复制代码</button></code>, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
