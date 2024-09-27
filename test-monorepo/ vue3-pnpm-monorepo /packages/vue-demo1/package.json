@@ -1,0 +1,9 @@
+{
+  "name": "vue-demo1",
+  "private": true,
+  "version": "0.0.0",
+  "dependencies": {
+    "editor": "workspace:^",
+    "tyh-ui2": "^4.4.0"
+  }
+}
