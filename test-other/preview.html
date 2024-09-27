@@ -1,0 +1,262 @@
+<html>
+<head>
+<meta http-equix="Content-Type" content="text/html; charset=utf-8">
+<title>preview</title>
+<script type="text/javascript">
+function onMouseMove(event){
+	//alert("hello");
+	var x	=	event.x;
+	var y	=	event.y;
+	var xx 	=	event.offsetX;
+	var yy	=	event.offsetY;
+	var s	=	"(" + x + "," + y + "), (";
+	s 	+=	xx + ", " + yy + ")";
+	s 	+=	(xx - x) + ", " + (yy - y);
+	s 	+=	"," + document.getElementById("canvas").width;
+	//alert(s);
+	document.getElementById("message").innerHTML 	= 	s;
+
+
+	//document.getElementById("message").innerHTML="(" + x + ", " + y + ")";
+}
+</script>
+</head>
+
+<body>
+<canvas id='canvas' width="1000px" height="300px" onmousemove="onMouseMove(event)">
+Your browser does not support canvas tag.
+</canvas>
+<div id = "message"></div>
+
+<script type="text/javascript">
+	var canvas	=	document.getElementById("canvas");
+	var ctx		=	canvas.getContext("2d");
+	trackTransforms(ctx);
+	//ctx.StrokeStyle	=	"#E0E0E0";
+	function drawOutline(ctx, x1, y1, x2, y2){
+		ctx.strokeStyle	=	"red";
+		ctx.lineWidth	=	3;
+		ctx.strokeRect(x1, y1, x2, y2);
+		//ctx.strokeRect(0, 0, canvas.width, canvas.height)
+	}
+	
+	function drawTimeline(ctx, x){
+		//no rotate 
+		var pt1			=	ctx.transformedPoint(4, 40);
+		var pt2			=	ctx.transformedPoint(canvas.width, canvas.height * 9.0 / 10);
+		//var pt3			=	ctx.transformedPoint(0, 0);
+		//var nPosY		=	canvas.height * 9.0 / 10;
+		var nPosY		=	pt2.y;
+		var nPosXStart	=	pt1.x;
+		var nPosXStop	=	pt2.x;
+		var nSlip		=	(nPosXStop - nPosXStart) / 20;
+		var nTimeSlipHeight	=	3;
+		// alert(nPosXStart + ", " + nPosXStop + ", " + nPosY);
+		ctx.fillStyle	=	"#E0E0E0";
+		ctx.fillRect(pt1.x, 50, x - pt1.x, nPosY - 50);
+
+		ctx.moveTo(nPosXStart, nPosY);
+		ctx.lineTo(nPosXStop, nPosY);
+		ctx.strokeStyle	=	'black';
+		ctx.lineWidth	=	3;
+		ctx.stroke();
+
+		for (var i=nPosXStart + nSlip; i < nPosXStop; i+= nSlip){
+			ctx.moveTo(i, nPosY - nTimeSlipHeight);
+			ctx.lineTo(i, nPosY + nTimeSlipHeight);
+			ctx.lineWidth	=	1;
+			ctx.stroke();
+		}
+		
+
+	}
+	function drawPoint(ctx, x, y, co){
+		var radius	=	3;
+		ctx.beginPath();
+		ctx.arc(x, y, radius, 0, Math.PI * 2, true);
+		ctx.closePath();
+		ctx.fillStyle	=	co;
+		ctx.fill();
+	}
+	function drawLine(ctx, x1, y1, x2, y2){
+		ctx.moveTo(x1, y1);
+		ctx.lineTo(x2, y2);
+		ctx.lineWidth	=	0.25;
+		ctx.fillStyle	=	'lightgreen';
+		ctx.stroke();
+	}
+	// function drawTimeCovered(ctx, x, y){
+	// 	ctx.fillStyle	=	"#E0E0E0";
+	// 	//var pt 			=	ctx.transformedPoint(x, y);
+	// 	ctx.fillRect(12, 12, x, y);
+	// }
+	
+	function redraw(){
+		//var ctx		=	canvas.getContext("2d")
+		//alert("hello");
+		var p1 = ctx.transformedPoint(0,0);
+		var p2 = ctx.transformedPoint(canvas.width,canvas.height);
+		ctx.clearRect(p1.x,p1.y,p2.x-p1.x,p2.y-p1.y);
+		drawOutline(ctx, p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
+		//drawOutline(ctx, 0, 0, canvas.width, canvas.height)
+		//drawOutline(ctx);
+		//ctx.clearRect(p1.x,p1.y,p2.x,p2.y);
+		// ctx.fillStyle = 'red';
+		// ctx.fillRect(0, 0, canvas.width, canvas.height);
+		//drawPoint(ctx, p1.x, p1.y, 'blue');
+		//drawTimeCovered(ctx, 180, canvas.height * 9.0 / 10);
+		drawTimeline(ctx, 180);
+		drawLine(ctx, 15, 120, 133, 100);
+		drawLine(ctx, 15, 120, 80, 160);
+		drawLine(ctx, 133, 100, 180, 130);
+		drawLine(ctx, 180, 130, 308, 133);
+		drawLine(ctx, 80, 160, 107, 231);
+		drawLine(ctx, 80, 160, 145, 160);
+		drawLine(ctx, 145, 160, 308, 133);
+		drawPoint(ctx, 15, 120, 'green');
+		drawPoint(ctx, 80, 160, 'green');
+		drawPoint(ctx, 133, 100, 'red');
+		drawPoint(ctx, 180, 130, 'gray');
+		drawPoint(ctx, 107, 231, 'green');
+		drawPoint(ctx, 145, 160, 'green');
+		drawPoint(ctx, 308, 133, 'gray');
+		drawPoint(ctx, 180, 200, 'blue');
+		//ctx.close();
+		return
+	}
+	redraw();
+	//ctx.rotate(10 * Math.PI / 180);
+	//redraw();
+	//ctx.clearRect(0, 0, canvas.weight, canvas.height);
+	//ctx.translate(50, 70);
+	//redraw();
+
+	var lastX=canvas.width/2, lastY=canvas.height/2;
+		var dragStart,dragged;
+		canvas.addEventListener('mousedown',function(evt){
+			document.body.style.mozUserSelect = document.body.style.webkitUserSelect = document.body.style.userSelect = 'none';
+			lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
+			lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
+			dragStart = ctx.transformedPoint(lastX,lastY);
+			dragged = false;
+			var pt = ctx.transformedPoint(lastX,lastY);
+			drawPoint(ctx, pt.x, pt.y, 'yellow');
+		},false);
+		canvas.addEventListener('mousemove',function(evt){
+			lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
+			lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
+			dragged = true;
+			if (dragStart){
+				var pt = ctx.transformedPoint(lastX,lastY);
+				ctx.translate(pt.x-dragStart.x,pt.y-dragStart.y);
+				redraw();
+			}
+		},false);
+		canvas.addEventListener('mouseup',function(evt){
+			dragStart = null;
+			//if (!dragged) zoom(evt.shiftKey ? -1 : 1 );
+			// var x = evt.offsetX || evt.pageX - canvas.offsetLeft;
+			// var y = evt.offsetY || evt.pageY - canvas.offsetTop;
+			// var pt = ctx.transformedPointBack(x, y);
+			//var p1 = ctx.transformedPoint(0,0);
+			//alert("(" + p1.x + ", " + p1.y + ")");
+		},false);
+
+		var scaleFactor = 1.1;
+		var zoomsize = 0;
+		var MAXZOOMSIZE = 10;
+		var zoom = function(clicks){
+			zoomsize += clicks;
+			if (zoomsize >= MAXZOOMSIZE){
+				clicks = MAXZOOMSIZE - (zoomsize - clicks);
+				zoomsize = MAXZOOMSIZE;
+			}
+			else if (zoomsize <= -MAXZOOMSIZE){
+				clicks = -MAXZOOMSIZE - (zoomsize - clicks);
+				zoomsize = -MAXZOOMSIZE;
+			}
+
+			var pt = ctx.transformedPoint(lastX,lastY);
+			ctx.translate(pt.x,pt.y);
+			var factor = Math.pow(scaleFactor,clicks);
+			ctx.scale(factor,factor);
+			ctx.translate(-pt.x,-pt.y);
+			redraw();
+		}
+
+		var handleScroll = function(evt){
+			var delta = evt.wheelDelta ? evt.wheelDelta/40 : evt.detail ? -evt.detail : 0;
+			if (delta) zoom(delta);
+			return evt.preventDefault() && false;
+		};
+		canvas.addEventListener('DOMMouseScroll',handleScroll,false);
+		canvas.addEventListener('mousewheel',handleScroll,false);
+	
+
+	// Adds ctx.getTransform() - returns an SVGMatrix
+	// Adds ctx.transformedPoint(x,y) - returns an SVGPoint
+	function trackTransforms(ctx){
+		var svg = document.createElementNS("http://www.w3.org/2000/svg",'svg');
+		var xform = svg.createSVGMatrix();
+		ctx.getTransform = function(){ return xform; };
+		
+		var savedTransforms = [];
+		var save = ctx.save;
+		ctx.save = function(){
+			savedTransforms.push(xform.translate(0,0));
+			return save.call(ctx);
+		};
+		var restore = ctx.restore;
+		ctx.restore = function(){
+			xform = savedTransforms.pop();
+			return restore.call(ctx);
+		};
+
+		var scale = ctx.scale;
+		ctx.scale = function(sx,sy){
+			xform = xform.scaleNonUniform(sx,sy);
+			return scale.call(ctx,sx,sy);
+		};
+		var rotate = ctx.rotate;
+		ctx.rotate = function(radians){
+			xform = xform.rotate(radians*180/Math.PI);
+			return rotate.call(ctx,radians);
+		};
+		var translate = ctx.translate;
+		ctx.translate = function(dx,dy){
+			xform = xform.translate(dx,dy);
+			return translate.call(ctx,dx,dy);
+		};
+		var transform = ctx.transform;
+		ctx.transform = function(a,b,c,d,e,f){
+			var m2 = svg.createSVGMatrix();
+			m2.a=a; m2.b=b; m2.c=c; m2.d=d; m2.e=e; m2.f=f;
+			xform = xform.multiply(m2);
+			return transform.call(ctx,a,b,c,d,e,f);
+		};
+		var setTransform = ctx.setTransform;
+		ctx.setTransform = function(a,b,c,d,e,f){
+			xform.a = a;
+			xform.b = b;
+			xform.c = c;
+			xform.d = d;
+			xform.e = e;
+			xform.f = f;
+			return setTransform.call(ctx,a,b,c,d,e,f);
+		};
+		var pt  = svg.createSVGPoint();
+		ctx.transformedPoint	 = function(x,y){
+			pt.x=x; pt.y=y;
+			return pt.matrixTransform(xform.inverse());
+		}
+		var pt2  = svg.createSVGPoint();
+		ctx.transformedPointBack	 = function(x,y){
+			pt2.x=x; pt2.y=y;
+			return pt2.matrixTransform(xform);
+		}
+	}
+
+</script>
+
+</body>
+</html>

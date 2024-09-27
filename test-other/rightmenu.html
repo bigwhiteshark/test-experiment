@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>右键模拟菜单</title>
+    <style>
+        .custom-context-menu {
+            position: fixed;
+            border: 1px solid #ccc;
+            list-style: none;
+            padding: 4px 0;
+            border-radius: 4px;
+            box-shadow: 0px 2px 6px 2px #ddd;
+
+            &.hidden {
+                display: none;
+            }
+
+            li {
+                padding: 8px 12px;
+                border-bottom: 1px solid #f0f2f5;
+                user-select: none;
+                transition: all 0.1s;
+
+                &:last-child {
+                    border-bottom: none;
+                }
+
+                &:hover {
+                    cursor: pointer;
+                    background-color: #0170fe;
+                    color: #fff;
+                }
+
+                &:active {
+                    background-color: #f0f2f7;
+                }
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Click on blank to show custom context menus</h1>
+    <script>
+        /**
+  * options:
+  * {
+  *  menus:[{
+  *    name: string,
+  *    onClick: Function
+  *  }],
+  * }
+  */
+        const ContextMenu = function (options) {
+            let instance;
+
+            function createMenu() {
+                const ul = document.createElement("ul");
+                ul.classList.add("custom-context-menu");
+                const { menus } = options;
+                if (menus && menus.length > 0) {
+                    for (let menu of menus) {
+                        const li = document.createElement("li");
+                        li.textContent = menu.name;
+                        li.onclick = menu.onClick;
+                        ul.appendChild(li);
+                    }
+                }
+                const body = document.querySelector("body");
+                body.appendChild(ul);
+                return ul;
+            }
+
+            return {
+                getInstance: function () {
+                    if (!instance) {
+                        instance = createMenu();
+                    }
+                    return instance;
+                },
+            };
+        };
+
+        const contextMenu = ContextMenu({
+            menus: [
+                {
+                    name: "custom menu 1",
+                    onClick: function (e) {
+                        console.log("menu1 clicked");
+                    },
+                },
+                {
+                    name: "custom menu 2",
+                    onClick: function (e) {
+                        console.log("menu2 clicked");
+                    },
+                },
+                {
+                    name: "custom menu 3",
+                    onClick: function (e) {
+                        console.log("menu3 clicked");
+                    },
+                },
+            ],
+        });
+
+        function showMenu(e) {
+            e.preventDefault();
+            const menus = contextMenu.getInstance();
+            menus.style.top = `${e.clientY}px`;
+            menus.style.left = `${e.clientX}px`;
+            menus.classList.remove("hidden");
+        }
+
+        function hideMenu(event) {
+            const menus = contextMenu.getInstance();
+            menus.classList.add("hidden");
+        }
+
+        document.addEventListener("contextmenu", showMenu);
+        document.addEventListener("click", hideMenu);
+
+
+    </script>
+</body>
+
+</html>

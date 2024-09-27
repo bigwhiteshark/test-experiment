@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <svg>
+        <rect x="50" y="50" width="100" height="100" fill="red" />
+    </svg>
+
+    <script>
+        const rect = document.querySelector("rect");
+
+        let isDragging = false;
+        let currentX;
+        let currentY;
+        let initialX;
+        let initialY;
+
+        const startDragging = (event) => {
+            initialX = event.clientX - currentX;
+            initialY = event.clientY - currentY;
+
+            if (event.target === rect) {
+                isDragging = true;
+            }
+        };
+
+        const drag = (event) => {
+            if (isDragging) {
+                event.preventDefault();
+
+                currentX = event.clientX - initialX;
+                currentY = event.clientY - initialY;
+
+                rect.setAttribute("x", currentX);
+                rect.setAttribute("y", currentY);
+            }
+        };
+
+        const stopDragging = () => {
+            initialX = currentX;
+            initialY = currentY;
+
+            isDragging = false;
+        };
+
+        rect.addEventListener("mousedown", startDragging);
+        rect.addEventListener("mousemove", drag);
+        rect.addEventListener("mouseup", stopDragging);
+    </script>
+
+</body>
+
+</html>

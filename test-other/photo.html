@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <video id="video" width="640" height="480" autoplay></video>
+    <button id="snap">拍照</button>
+    <button id="save">保存</button>
+    <canvas id="canvas" width="640" height="480"></canvas>
+</body>
+<script>
+    var count = 0;//是否点击过拍照
+    var video = document.getElementById('video');
+
+    // Get access to the camera!
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        // Not adding `{ audio: true }` since we only want video now
+        navigator.mediaDevices.getUserMedia({ video: true }).then(function (stream) {
+            //video.src = window.URL.createObjectURL(stream);
+            video.srcObject = stream;
+            video.play();
+        });
+    }
+    // Elements for taking the snapshot
+    var canvas = document.getElementById('canvas');
+    var context = canvas.getContext('2d');
+    var video = document.getElementById('video');
+    // Trigger photo take
+    var snap = document.getElementById("snap");
+
+    snap.addEventListener("click", function () {
+        context.drawImage(video, 0, 0, 640, 480);
+        count++;
+        if (video.paused) {
+            snap.innerText = "拍照"
+            video.play();
+        } else {
+            snap.innerText = "重新拍一张呀"
+            video.pause();
+        }
+    });
+
+    var save = document.getElementById("save");
+    save.addEventListener("click", function () {
+        if (count === 0) {
+            alert("请先拍一张帅气照")
+        } else {
+            var a = document.createElement('a');
+            console.log(context.drawImage);
+            a.setAttribute('href', canvas.toDataURL());　　//toDataUrl：将canvas画布信息转化为base64格式图片
+            a.setAttribute('download', 'downImg')　　//这个是必须的，否则会报错
+            a.setAttribute('target', '_self');
+            a.click()
+        }
+    })
+
+
+</script>
+
+</html>

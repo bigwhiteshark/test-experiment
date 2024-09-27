@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #myElement {
+            width: 300px;
+            height: 400px;
+            border: 2px solid red;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="myElement">
+
+    </div>
+</body>
+<script>
+    // 获取需要更改 cursor 样式的元素
+    var element = document.getElementById("myElement");
+
+    // 定义要更改的 cursor 样式列表
+    var cursorStyles = ["pointer", "wait", "help", "not-allowed"];
+
+    // 设置计时器，每隔一段时间更改一次 cursor 样式
+    // var interval = setInterval(changeCursorStyle, 1000);
+
+    // 随机更改 cursor 样式的函数
+    function changeCursorStyle() {
+        var randomIndex = Math.floor(Math.random() * cursorStyles.length);
+        var randomCursor = cursorStyles[randomIndex];
+        console.log(randomCursor)
+        element.style.cursor = randomCursor;
+    }
+
+    // 停止更改 cursor 样式的函数
+    function stopChangingCursorStyle() {
+        //clearInterval(interval);
+    }
+
+    setTimeout(() => {
+        document.body.remove(element)
+    }, 2000)
+
+    // 在鼠标悬停在元素上时停止更改 cursor 样式
+    element.addEventListener("mouseover", stopChangingCursorStyle);
+</script>
+
+</html>

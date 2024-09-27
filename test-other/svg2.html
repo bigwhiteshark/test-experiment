@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // 定义变量
+        var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        var isDrawing = false;
+        var startX, startY;
+
+        // 监听鼠标按下事件
+        document.addEventListener("mousedown", function (e) {
+            // 设置起始点坐标
+            startX = e.clientX;
+            startY = e.clientY;
+            isDrawing = true;
+        });
+
+        // 监听鼠标移动事件
+        document.addEventListener("mousemove", function (e) {
+            if (isDrawing) {
+                // 计算矩形的宽和高
+                var width = e.clientX - startX;
+                var height = e.clientY - startY;
+                // 更新矩形的位置和大小
+                rect.setAttribute("x", startX);
+                rect.setAttribute("y", startY);
+                rect.setAttribute("width", width);
+                rect.setAttribute("height", height);
+                // 将矩形添加到SVG中
+                svg.appendChild(rect);
+            }
+        });
+
+        // 监听鼠标松开事件
+        document.addEventListener("mouseup", function () {
+            isDrawing = false;
+        });
+
+        // 将SVG添加到页面中
+        document.body.appendChild(svg);
+
+    </script>
+</body>
+
+</html>

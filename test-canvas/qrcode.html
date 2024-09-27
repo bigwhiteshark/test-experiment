@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/@bitjson/qr-code@1.0.2/dist/qr-code.js"></script>
+  <style>
+    .qrcode {}
+  </style>
+</head>
+
+<body>
+  <qr-code id="qr1" class="qrcode"
+    contents="https://beijing.xstore.qihu.com/zhinao-hongtu/u/231997482/b9dbd797-d787-4857-ae62-ecf70fa5c830.png"
+    module-color="#eb5055" position-ring-color="#13532d" position-center-color="#70c559" mask-x-to-y-ratio="1.2" style="
+    width: 200px;
+    height: 200px;
+    margin: 2em auto;
+    background-color: #fff9e6;
+  ">
+    <img src="https://ss.360tres.com/static/121a1737750aa53d.ico" slot="icon" />
+  </qr-code>
+
+  <script>
+    document.getElementById('qr1').addEventListener('codeRendered', () => {
+      document.getElementById('qr1').animateQRCode('MaterializeIn');
+      //document.getElementById('qr1').animateQRCode('FadeInTopDown');
+      //document.getElementById('qr1').animateQRCode('FadeInCenterOut');
+      //document.getElementById('qr1').animateQRCode('RadialRipple');
+    });
+    /* document.addEventListener('click', () => {
+      console.log('click')
+      document.getElementById('qr1').style.display = 'block'
+      document.getElementById('qr1').animateQRCode('MaterializeIn');
+    }) */
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #canvas {
+            width: 400px;
+            height: 400px;
+            border: 1px solid red;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" width="=400" height="400"></canvas>
+</body>
+<script>
+    (async function () {
+        //const screenStream = await navigator.mediaDevices.getDisplayMedia();
+        //console.log(screenStream)
+        const canvasE = document.getElementById('canvas')
+        const canvas = canvasE.getContext('2d')
+
+        const cameraStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        //const audioStream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
+        function createStreamVideo(stream) {
+            const video = document.createElement("video");
+            video.srcObject = stream;
+            video.autoplay = true;
+            document.body.appendChild(video)
+
+            return video;
+        }
+
+        const cameraVideo = createStreamVideo(cameraStream);
+        function animationFrameHandler() {
+            /*  if (screenVideo) {
+                 canvas.drawImage(screenVideo, 0, 0, canvasWidth, canvasHeight);
+             } */
+
+            if (cameraVideo) {
+                canvas.drawImage(
+                    cameraVideo,
+                    300,
+                    300,
+                    200,
+                    200
+                )
+            }
+
+            requestAnimationFrame(animationFrameHandler.bind(this));
+        }
+        animationFrameHandler()
+
+
+        // const screenVideo = createStreamVideo(screenStream);
+
+        const recorderVideoStream = await cameraVideo.captureStream();
+
+        const stream = new MediaStream();
+        //audioStream.getAudioTracks().forEach(track => stream.addTrack(track));
+        recorderVideoStream.getVideoTracks().forEach(track => stream.addTrack(track));
+
+        cameraVideo.srcObject = stream;
+
+
+
+        const recorder = new MediaRecorder(stream, { mineType: "video/webm;codecs=h264" });
+        recorder.ondataavailable = e => {
+            recorderVideo.src = URL.createObjectURL(e.data);
+        };
+
+        //开始录制
+        recorder.start();
+
+        //停止录制
+        //recorder.stop();
+
+
+
+    })()
+</script>
+
+</html>

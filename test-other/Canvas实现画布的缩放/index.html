@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iot</title>
+</head>
+
+<body>
+    <canvas id="canvas" width="800" height="800"
+        style="width: 800px;height: 800px;border: 1px solid gray;margin: auto;display: flex;"></canvas>
+</body>
+
+</html>
+<script type="module">
+    import index from './index.js';
+    window.onload = (() => {
+        index.init();
+    })
+</script>

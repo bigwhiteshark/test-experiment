@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    刷新
+</body>
+<script>
+
+    // 显示挽留弹出窗口
+
+    function showRetentionPopup() {
+        const popup = document.createElement("div");
+        popup.innerHTML = "你确定要离开吗？";
+        popup.style.position = "fixed";
+        popup.style.top = "50%";
+        popup.style.left = "50%";
+        popup.style.transform = "translate(-50%, -50%)";
+        popup.style.backgroundColor = "#fff";
+        popup.style.padding = "20px";
+        popup.style.border = "1px solid #ccc";
+        popup.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.2)";
+
+        document.body.appendChild(popup);
+        return true
+    }
+
+    // 监听页面刷新事件
+    /* window.addEventListener("onbeforeunload", function (event) {
+        event.preventDefault();
+        showRetentionPopup()
+        return '确认要离开吗'
+    }); */
+
+    /*  window.onbeforeunload = function (event) {
+         event.preventDefault();
+         return true
+     }; */
+
+    /* window.onbeforeunload = function (e) {
+        var dialogText = 'Dialog text here';
+        e.returnValue = dialogText;
+        return dialogText;
+    }; */
+
+    if (typeof window.history.pushState === "function") {
+        window.history.pushState("jimmy", null, "/");
+        window.onpopstate = function () {
+            window.history.pushState("jimmy", null, "/");
+        };
+    }
+
+    window.addEventListener("beforeunload", (event) => {
+        // Cancel the event as stated by the standard.
+        event.preventDefault();
+        // Chrome requires returnValue to be set.
+        event.returnValue = '';
+    });
+
+
+
+    // 监听挽留弹出窗口关闭事件
+    /* window.addEventListener("unload", function () {
+        window.removeEventListener("beforeunload", showRetentionPopup);
+    }); */
+
+    // 处理挽留弹出窗口关闭
+    function handleRetentionPopupClosed() {
+        // 执行你的自定义操作，例如执行页面刷新等
+        window.location.reload();
+    }
+
+
+
+</script>
+
+</html>

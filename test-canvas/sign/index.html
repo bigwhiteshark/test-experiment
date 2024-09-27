@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"
+		content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>签名</title>
+	<link rel="stylesheet" type="text/css" href="css/sign.css">
+</head>
+
+<body>
+	<div style="text-align: center;
+			display: flex;
+			justify-content: center;
+			align-items: center; ">
+		<p id="signPeo" class="initBlok">签名</p>
+		<p style="line-height:30px" class="initBlok">：</p>
+		<div id="next-img" style="display: flex;
+					justify-content: center;">
+			<img class="name-block " id="canvas0"></img>
+		</div>
+	</div>
+	<div class="canvas-sign">
+		<div style="text-align: center; ">
+			<p style="color:#FFFFFF">请逐字手签：</p>
+			<div class="next-img">
+				<img class="name-block btn-name" id="ca0"></img>
+			</div>
+		</div>
+		<div id="test2">
+			<p style="color:#FFFFFF">签字区域：</p>
+			<div id="mycanvas">
+				<canvas id="canvas"></canvas>
+			</div>
+		</div>
+		<div class="btns">
+			<button id="clear_btn" onclick="reset()" class="op_btn">清 除</button>
+			<div class="next-t" style="display: inline-block;margin:0 10px">
+			</div>
+			<button type="button" id="comp">保存</button>
+		</div>
+	</div>
+	<div id="images">
+		<div id="images-copy">
+			<p>确认以下签名字数是否完整,若不是则点击取消后，补全后再次保存</p>
+			<div class="next-imgs">
+			</div>
+			<div class="btns">
+				<button type="button" style="color: #fff;background: #333333;margin-right:5px" id="cancel">取消</button>
+				<button type="button" style="color: #fff;background: #00aaff;margin-left:5px" id="submit">确定</button>
+			</div>
+		</div>
+	</div>
+	<script src="https://v.bootstrapmb.com/2022/3/jdsau12093/js/jquery.min.js"></script>
+	<script type="text/javascript" src="./sign.js"></script>
+</body>
+
+</html>

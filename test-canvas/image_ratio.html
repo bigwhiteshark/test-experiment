@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+</head>
+
+<body>
+  <img id="outputImg" style="display: block;" src="./11.png" alt="">
+  <!-- <canvas id="canvasEle"></canvas> -->
+</body>
+<script>
+  function cropImage(imageUrl, targetRatio) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.addEventListener('load', function () {
+        const originalWidth = img.width;
+        const originalHeight = img.height;
+        const originalRatio = originalWidth / originalHeight;
+
+        if (originalRatio < 1 / 3 || originalRatio > 3) {
+          let newWidth, newHeight;
+          if (originalRatio < 1 / 3) {
+            newWidth = originalHeight * targetRatio;
+            newHeight = originalHeight;
+          } else {
+            newWidth = originalWidth;
+            newHeight = originalWidth / targetRatio;
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = newWidth;
+          canvas.height = newHeight;
+          const context = canvas.getContext('2d');
+
+          console.log(originalWidth, originalHeight, newWidth, newHeight)
+
+          context.drawImage(img, 0, 0, newWidth, newHeight);
+
+          const croppedImageUrl = canvas.toDataURL();
+          resolve(croppedImageUrl);
+        } else {
+          resolve(imageUrl); // 图片比例已在1:3与3:1比例之间，无需截取
+        }
+      });
+
+      img.addEventListener('error', function (error) {
+        reject(error);
+      });
+
+      img.src = imageUrl;
+    });
+  }
+
+  const imageUrl = './11.png';
+  const targetRatio = 2; // 目标比例，可以自定义
+
+  cropImage(imageUrl, targetRatio)
+    .then((croppedImageUrl) => {
+      console.log('截取后的图片URL:', croppedImageUrl);
+      const img = document.getElementById('outputImg')
+      img.src = croppedImageUrl
+      /*   const canvasEle = document.getElementById('canvasEle')
+        const ctx = canvasEle.getContext('2d')
+        ctx.drawImage(croppedImageUrl, 0, 0) */
+      // 在这里可以使用截取后的图片URL进行展示/保存等操作
+    })
+    .catch((error) => {
+      console.error('截取图片时出现了错误:', error);
+    });
+</script>
+
+</html>

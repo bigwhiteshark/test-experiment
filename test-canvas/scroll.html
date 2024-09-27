@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>带滚动条的页面</title>
+  <style>
+    body {
+      height: 2000px;
+      /* 设置页面高度，使得可以出现滚动条 */
+    }
+
+    .scrollToTop {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: none;
+      /* 初始时隐藏返回顶部按钮 */
+      cursor: pointer;
+      background-color: #333;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>带滚动条的页面</h1>
+  <p>这是一个带滚动条的页面。</p>
+
+  <a href="#" class="scrollToTop">返回顶部</a>
+
+  <script>
+    window.addEventListener('scroll', function () {
+      var scrollToTopBtn = document.querySelector('.scrollToTop');
+      if (window.scrollY > 100) {
+        scrollToTopBtn.style.display = 'block'; // 当页面滚动超过100px时显示返回顶部按钮
+      } else {
+        scrollToTopBtn.style.display = 'none'; // 否则隐藏返回顶部按钮
+      }
+    });
+
+    document.querySelector('.scrollToTop').addEventListener('click', function (e) {
+      e.preventDefault();
+      var scrollStep = -window.scrollY / (500 / 15),
+        scrollInterval = setInterval(function () {
+          if (window.scrollY != 0) {
+            window.scrollBy(0, scrollStep);
+          }
+          else clearInterval(scrollInterval);
+        }, 15);
+    });
+  </script>
+</body>
+
+</html>

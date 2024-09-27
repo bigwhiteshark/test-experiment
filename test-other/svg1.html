@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        #mySvg {
+            border: 1px solid black;
+            cursor: default;
+        }
+
+        .rect {
+            fill: blue;
+            stroke: black;
+            stroke-width: 1;
+            cursor: move;
+        }
+
+        .handle {
+            fill: white;
+            stroke: black;
+            stroke-width: 1;
+            cursor: nwse-resize;
+        }
+    </style>
+</head>
+
+<body>
+    <svg id="mySvg" width="400" height="300">
+    </svg>
+
+    <script>
+        var svg = document.getElementById('mySvg');
+        var activeRect = null;
+        var offsetX, offsetY;
+        var resizing = false;
+        var resizeOffsetX, resizeOffsetY;
+
+        svg.addEventListener('mousedown', startAction);
+        svg.addEventListener('mousemove', handleMove);
+        svg.addEventListener('mouseup', stopAction);
+
+        function createRect(x, y, width, height) {
+            var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            rect.setAttribute('class', 'rect');
+            rect.setAttribute('x', x);
+            rect.setAttribute('y', y);
+            rect.setAttribute('width', width);
+            rect.setAttribute('height', height);
+            return rect;
+        }
+
+        function createHandle(x, y) {
+            var handleSize = 10;
+            var handle = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            handle.setAttribute('class', 'handle');
+            handle.setAttribute('x', x - handleSize / 2);
+            handle.setAttribute('y', y - handleSize / 2);
+            handle.setAttribute('width', handleSize);
+            handle.setAttribute('height', handleSize);
+            return handle;
+        }
+
+        function startAction(e) {
+            var target = e.target;
+            if (target.nodeName === 'rect' && target.getAttribute('class') === 'rect') {
+                activeRect = target;
+                offsetX = e.clientX - activeRect.getAttribute('x');
+                offsetY = e.clientY - activeRect.getAttribute('y');
+                resizing = false;
+            } else if (target.nodeName === 'rect' && target.getAttribute('class') === 'handle') {
+                activeRect = target.parentNode;
+                resizeOffsetX = e.clientX - target.getAttribute('x');
+                resizeOffsetY = e.clientY - target.getAttribute('y');
+                resizing = true;
+            } else {
+                activeRect = null;
+            }
+        }
+
+        function handleMove(e) {
+            if (activeRect) {
+                if (resizing) {
+                    var x = e.clientX - resizeOffsetX;
+                    var y = e.clientY - resizeOffsetY;
+                    var width = x - parseFloat(activeRect.getAttribute('x'));
+                    var height = y - parseFloat(activeRect.getAttribute('y'));
+                    activeRect.setAttribute('width', width);
+                    activeRect.setAttribute('height', height);
+                } else {
+                    var x = e.clientX - offsetX;
+                    var y = e.clientY - offsetY;
+                    activeRect.setAttribute('x', x);
+                    activeRect.setAttribute('y', y);
+                }
+            }
+        }
+
+        function stopAction() {
+            activeRect = null;
+        }
+
+        // 添加初始矩形框
+        var rect = createRect(50, 50, 100, 80);
+        var handle = createHandle(150, 130);
+        rect.appendChild(handle);
+        svg.appendChild(rect);
+    </script>
+</body>
+
+</html>

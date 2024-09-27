@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+
+<head>
+  <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" /> <!-- reset css -->
+  <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+  <style>
+    body {
+      background-color: ivory;
+    }
+
+    canvas {
+      border: 1px solid red;
+    }
+  </style>
+  <script>
+    $(function () {
+
+      var canvas = document.getElementById("canvas");
+      var ctx = canvas.getContext("2d");
+
+      var cw = canvas.width;
+      var ch = canvas.height;
+      var iw, ih;
+
+      var img = new Image();
+      img.onload = start;
+      img.src = "https://www.w3schools.com/css/img_fjords.jpg";
+      function start() {
+        iw = img.width;
+        ih = img.height;
+
+        $("#test").mousedown(function () { doAnimation = true; });
+        $("#test").mouseup(function () { doAnimation = false; });
+        $("#test").mouseout(function () { doAnimation = false; });
+
+        requestAnimationFrame(animate);
+
+        ctx.drawImage(img, cw / 2 - iw / 2, ch / 2 - ih / 2);
+
+      }
+
+      var scale = 1.00;
+      scaleDirection = 0.01;
+      var minScale = 0.50;
+      var maxScale = 1.50;
+      var doAnimation = false;
+
+      function animate() {
+
+        requestAnimationFrame(animate);
+
+        if (true) {
+
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img,
+            0, 0, iw, ih,
+            (cw - iw * scale) / 2, (ch - ih * scale) / 2, iw * scale, ih * scale
+          );
+
+          scale += scaleDirection;
+          if (scale < minScale || scale > maxScale) {
+            scaleDirection *= -1;
+            scale += scaleDirection;
+          }
+
+        }
+
+      }
+
+    }); // end $(function(){});
+  </script>
+</head>
+
+<body>
+  <button id="test">Animate</button><br>
+  <canvas id="canvas" width=300 height=300></canvas>
+</body>
+
+</html>

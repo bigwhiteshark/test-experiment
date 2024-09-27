@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+</head>
+
+<body>
+  <script>
+    let div = document.createElement('div');
+    let clientWidth = document.documentElement.clientWidth	// 获取手机的像素宽度
+    let clientHeight = document.documentElement.clientHeight// 获取手机的像素高度
+    div.style.boxShadow = '0px 0px 0px 0.5em #e0e1e9';
+    div.style.width = "24px";
+    div.style.height = "24px";
+    div.style.left = clientWidth - 50 + 'px';
+    console.log("初始位置left" + div.style.left)
+    div.style.top = clientHeight * 0.6 + 'px';
+    div.style.zIndex = '100000';
+    div.style.position = 'fixed';
+    div.style.background = 'red';
+
+    div.style.transition = 'all 0.3s';
+    div.style.bottom = '436px';
+    div.style.right = 0;
+    div.style.margin = '5px 10px';
+    div.style.background = 'rgb(197 203 211)'
+    div.style.borderRadius = '15px';
+    document.body.appendChild(div);
+    var divattr = document.createAttribute("id");
+    divattr.value = "float_info";
+    //把属性id = "float_info"添加到div
+    div.setAttributeNode(divattr);
+    let flag = 0; //标记是拖曳还是点击
+    var oDiv = document.getElementById('float_info');
+    oDiv.style.display = 'block'; // 显示元素
+    oDiv.addEventListener("touchstart", () => {
+      flag = 0;
+      oDiv.style.transition = 'none'
+    })
+
+    // 在拖拽的过程中，按钮应该跟随鼠标的移动而移动。
+    oDiv.addEventListener("touchmove", (e) => {
+      flag = 1
+      console.log('移动中', e)
+      if (e.targetTouches.length === 1) {  // 一根手指 
+        e.preventDefault();// 阻止默认的滚动行为
+        div.style.left = e.targetTouches[0].clientX - 20 + 'px'//clientX：触摸目标在视口中的x坐标。
+        div.style.top = e.targetTouches[0].clientY - 25 + 'px'//clientY：触摸目标在视口中的y坐标。
+        console.log('移动中', div.style.left)
+      }
+    })
+
+    // 拖拽结束以后，重新调整按钮的位置并重新设置过度动画。
+    oDiv.addEventListener("touchend", () => {
+      // 如果是点击跳转到首页
+      if (flag == 0) {
+        that.$router.push({
+          path: "/workspaces/views/index/index",
+        });
+      } else {
+        div.style.transition = 'all 0.3s'
+        console.log('拖拽结束后left', div.style.left)
+        console.log('拖拽结束后top', div.style.top)
+        if (parseInt(div.style.left) > (document.documentElement.clientWidth / 2)) {
+          div.style.left = document.documentElement.clientWidth - 50 + 'px';
+        } else {
+          div.style.left = 0 + 'px'
+        }
+        // 控制其超出屏幕回到原始位置
+        if (parseInt(div.style.top) > (document.documentElement.clientHeight) || parseInt(div.style.top) < 0) {
+          div.style.top = document.documentElement.clientHeight * 0.6 + 'px'
+        }
+
+      }
+
+    })
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>动画效果</title>
+    <style>
+        #box {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: #000000;
+            opacity: 0.3;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // 点击按钮触发动画
+            $("#btn").click(function () {
+                // 获取屏幕的宽度和高度
+                var screenWidth = $(window).width();
+                var screenHeight = $(window).height();
+
+                // 设置div的初始位置和尺寸
+                $("#box").css({
+                    "left": "0px",
+                    "top": "30px",
+                    "width": "100px",
+                    "height": "100px",
+                    "display": "block"
+                });
+
+                // 动画效果：宽高放大到500px，同时移动到屏幕中央
+                $("#box").animate({
+                    "width": "500px",
+                    "height": "500px",
+                    "left": (screenWidth - 500) / 2 + "px",
+                    "top": (screenHeight - 500) / 2 + "px"
+                }, 1000); // 动画持续时间为1秒
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <button id="btn">点击按钮</button>
+    <div id="box"></div>
+</body>
+
+</html>

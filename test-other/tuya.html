@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Canvas案例-网页涂鸦板</title>
+</head>
+
+<body>
+    <!--<center></center>表示将标签内所有的内容居中-->
+    <center>
+        <canvas id="cavsElem">
+            你的浏览器不支持canvas，请升级浏览器
+        </canvas><br>
+        选择画布颜色：<input type="color" value="#ffffff" id="mycanvasColor"
+            onchange="canvasColorChange()" />&nbsp;&nbsp;&nbsp;
+        选择画笔颜色：<input type="color" value="#ff0000" id="mycolor" onchange="colorChange()" />&nbsp;&nbsp;&nbsp;
+        <input type="button" value="清除" id="clear" onclick="clearAll()">&nbsp;&nbsp;&nbsp;&nbsp;
+        选择画笔粗细：<input type="number" id="gsize" value="1" min="1" onchange="sizeChange()">&nbsp;&nbsp;&nbsp;
+        <input type="button" value="上一步" onclick="prevStep()">
+        <input type="button" value="下一步" onclick="nextStep()">&nbsp;&nbsp;&nbsp;
+        <button onClick="saveImg()">生成图片</button><br>
+        <h3>下面是涂鸦生成的图片</h3>
+        <img id='img' alt='请涂鸦……' />
+    </center>
+    <script>
+        //画布数据
+        var imgList = [];
+        //上一步索引
+        var prevIndex = 0;
+        //下一步索引
+        var nextIndex = 0;
+        //当前索引
+        var currentIndex = 0;
+        //获取图片节点
+        var img = document.getElementById('img');
+        //获得画布
+        var canvas = document.getElementById('cavsElem');
+        //准备画笔（获取上下文对象）
+        var context = canvas.getContext('2d');
+        //设置标签的宽高和边框
+        canvas.width = 900;
+        canvas.height = 600;
+        context.strokeStyle = document.getElementById("mycolor").value; //设置描边颜色
+        canvas.style.border = "1px solid #000";
+        //当鼠标按下触发onmousedown事件时，定义一个函数获取鼠标起始坐标
+        canvas.onmousedown = function (e) {
+            upIndex(imgList.length);
+            var x = e.clientX - canvas.getBoundingClientRect().left;
+            var y = e.clientY - canvas.getBoundingClientRect().top;
+            context.beginPath(); //开始规划路径
+            context.moveTo(x, y); //移动起始点
+            //当鼠标移动触发onmousemove事件时,定义一个函数获取绘制线条的坐标
+            canvas.onmousemove = function (event) {
+                var x = event.clientX - canvas.getBoundingClientRect().left;
+                var y = event.clientY - canvas.getBoundingClientRect().top;
+                // canvas.clearRect(0, 0, 900, 600);
+                context.lineTo(x, y); //绘制线条
+                context.stroke(); //绘制描边
+            };
+            //当鼠标按键被松开时，onmousemovet函数返回null
+            //注意，要用document全局监听
+            canvas.onmouseup = function (event) {
+                //调用保存画布数据
+                pushImg();
+                console.log('imgList :', imgList);
+                canvas.onmousemove = null;
+
+            };
+        };
+
+
+        /* 清除画布 */
+        function clearAll() {
+            //清除矩形
+            context.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        /* 画布颜色选择 */
+        function canvasColorChange() {
+            var canvasColor = document.getElementById("mycanvasColor");
+            var x = canvasColor.value;
+            // canvas.setAttribute('style', "background:" + x + ";z-index: -1;");   //直接设置背景颜色
+            context.fillStyle = x; //设置填充颜色
+            context.fillRect(0, 0, canvas.width, canvas.height);
+
+        }
+        /* 画笔颜色选择 */
+        function colorChange() {
+            var mycolor = document.getElementById("mycolor");
+            var x = mycolor.value;
+            context.strokeStyle = x; //设置描边颜色
+        }
+        /* 画笔粗细 */
+        function sizeChange() {
+            var mycolor = document.getElementById("gsize");
+            var x = mycolor.value;
+            context.lineWidth = x; //设置线的粗细
+        }
+        /* 保存画布数据 */
+        function pushImg() {
+            imgList.push(context.getImageData(0, 0, canvas.width, canvas.height));
+        }
+        /* 上一步 */
+        function prevStep() {
+            clearAll();
+            if (prevIndex >= 0) {
+                context.putImageData(imgList[prevIndex], 0, 0);
+            }
+            upIndex(prevIndex);
+
+        }
+        /* 下一步 */
+        function nextStep() {
+
+            console.log('nextIndex :', nextIndex);
+            if (nextIndex !== imgList.length) {
+                clearAll();
+                context.putImageData(imgList[nextIndex], 0, 0);
+            }
+            upIndex(nextIndex);
+        }
+
+        /* 更新索引 */
+        function upIndex(index) {
+            if (index === -1) {
+                prevIndex = -1;
+            } else {
+                prevIndex = index - 1;
+            }
+
+            if (index === imgList.length) {
+                nextIndex = imgList.length;
+            } else {
+                nextIndex = index + 1;
+            }
+            currentIndex = index;
+        }
+
+        /* 生成图片 */
+        function saveImg() {
+            //转为base64编码
+            var dataUrl = canvas.toDataURL();
+            img.src = dataUrl;
+        }
+    </script>
+</body>
+
+</html>

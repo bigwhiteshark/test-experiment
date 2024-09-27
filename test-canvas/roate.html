@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Rotating Image</title>
+  <style>
+    body {
+      margin: 0;
+    }
+
+    canvas {
+      display: block;
+      margin: 20px auto;
+      border: 1px solid black;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="myCanvas" width="400" height="400"></canvas>
+
+  <script>
+
+    function drawRotatingImage(canvas, imageSrc, duration) {
+      const context = canvas.getContext('2d');
+      const image = new Image();
+      image.src = imageSrc;
+
+      image.onload = function () {
+        const imageWidth = image.naturalWidth;
+        const imageHeight = image.naturalHeight;
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+
+        let startTime = null;
+
+        function animate(currentTime) {
+          if (!startTime) startTime = currentTime;
+          const elapsedTime = currentTime - startTime;
+          const rotationSpeed = 1 - Math.pow(elapsedTime / duration, 2); // 缓冲效果，速度从快到慢
+
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          context.save();
+          context.translate(centerX, centerY);
+          context.rotate(rotationSpeed * 2 * Math.PI);
+          context.drawImage(image, -imageWidth / 2, -imageHeight / 2, imageWidth, imageHeight);
+          context.restore();
+
+          if (elapsedTime < duration) {
+            requestAnimationFrame(animate);
+          }
+        }
+
+        animate(0);
+      };
+    }
+
+    const canvas = document.getElementById('myCanvas');
+    drawRotatingImage(canvas, 'https://beijing.xstore.qihu.com/zhinao-hongtu/u/231997482/a0840f16-278c-454e-accb-8d27a425a886.png', 5000);
+  </script>
+</body>
+
+</html>

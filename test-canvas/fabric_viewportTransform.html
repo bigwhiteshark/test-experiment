@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/fabric@6.0.2/dist/index.min.js"></script>
+</head>
+
+<body>
+  <canvas id="canvasBox" width="600" height="600" style="border: 1px solid #ccc;"></canvas>
+
+  <script>
+    // 初始化画布
+    let canvas = new fabric.Canvas('canvasBox', {
+      width: 400,
+      height: 400
+    })
+
+    // 矩形
+    let rect = new fabric.Rect({
+      top: 10,
+      left: 10,
+      width: 80,
+      height: 80,
+      fill: 'pink'
+    })
+
+    // 三角形
+    let triangle = new fabric.Triangle({
+      top: 100,
+      left: 100,
+      width: 80, // 底边长度
+      height: 100, // 底边到对角的距离
+      fill: 'blue'
+    })
+
+    // 文本
+    let text = new fabric.Text('雷猴', {
+      top: 240,
+      left: 100
+    })
+
+    // 将矩形、三角形、文本添加到画布中
+    canvas.add(rect, triangle, text)
+
+    canvas.viewportTransform[3] = 0.5
+  </script>
+
+</body>
+
+</html>

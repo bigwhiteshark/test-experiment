@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+</body>
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 600;
+    canvas.height = 400;
+
+    /* ctx.fillStyle = 'red';
+    ctx.fillRect(50, 50, 50, 50);
+
+    ctx.translate(50, 50);
+
+    ctx.fillStyle = 'green';
+    ctx.fillRect(50, 50, 50, 50);
+
+    // 第二次坐标系偏移
+    ctx.translate(50, 50);
+
+    ctx.fillStyle = 'blue';
+    ctx.fillRect(50, 50, 50, 50); */
+
+    /* ctx.fillStyle = 'red';
+    ctx.fillRect(50, 50, 50, 50);
+
+    // 保存绘图上下文
+    ctx.save()
+
+    ctx.translate(50, 50);
+
+    ctx.fillStyle = 'green';
+    ctx.fillRect(50, 50, 50, 50);
+
+    // 绘制完成后恢复上下文
+    ctx.restore()
+
+    ctx.fillStyle = 'blue';
+    ctx.fillRect(0, 0, 50, 50); */
+
+    ctx.scale(0.5, 2);
+    ctx.fillStyle = "blue";
+    ctx.fillRect(50, 50, 100, 50);
+
+
+</script>
+
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>3D旋转图片示例</title>
+  <style>
+    .container {
+      perspective: 1000px;
+      /* 设置透视距离 */
+      width: 200px;
+      height: 200px;
+      position: relative;
+    }
+
+    .image {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: rotateZ(45deg);
+      transform-origin: center center;
+      transform-style: preserve-3d;
+      animation: rotateY 3s ease-in-out forwards;
+      /* 使用动画效果，速度由快变慢的缓冲效果 */
+    }
+
+    @keyframes rotateY {
+      0% {
+        transform: translate(-50%, -50%) rotateY(0deg) rotateZ(45deg);
+      }
+
+      100% {
+        transform: translate(-50%, -50%) rotateY(360deg) rotateZ(45deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <img class="image"
+      src="https://beijing.xstore.qihu.com/zhinao-hongtu/u/231997482/e5f238e9-bd71-4848-8c97-cefe04274bb7.png"
+      alt="3D旋转图片">
+  </div>
+</body>
+
+</html>
