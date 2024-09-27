@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <script src="./lib/tf.min.js"></script>
+</head>
+
+<body>
+  <script>
+    /* const a = tf.tensor([
+      [1, 2],
+      [3, 4],
+    ]);
+    console.log("shape:", a.shape);
+    a.print();
+
+    // Or you can create a tensor from a flat array and specify a shape.
+    const shape = [2, 2];
+    const b = tf.tensor([1, 2, 3, 4], shape);
+    console.log("shape:", b.shape);
+    b.print();
+
+    const c = tf.tensor(
+      [
+        [1, 2],
+        [3, 4],
+      ],
+      [2, 2],
+      "int32"
+    );
+
+    console.log("shape:", c.shape);
+    console.log("dtype", c.dtype);
+    c.print(); */
+
+    const a = tf.tensor([[1, 2, 3], [4, 5, 6]]);
+    console.log('a shape:', a.shape);
+    a.print();
+
+    const b = a.reshape([1, 2, 3, 1]);
+    console.log('b shape:', b.shape);
+    b.print();
+
+
+    /*  const a = tf.tensor([[1, 2], [3, 4]]);
+     // Returns the multi dimensional array of values.
+     console.log('shape:', a.shape)
+     a.array().then(array => console.log(array));
+     // Returns the flattened data that backs the tensor.
+     a.data().then(data => console.log(data)); */
+
+    /* const a = tf.tensor([[1, 2], [3, 4]]);
+    // Returns the multi dimensional array of values.
+    console.log(a.arraySync());
+    // Returns the flattened data that backs the tensor.
+    console.log(a.dataSync()); */
+
+    /* const x = tf.tensor([1, 2, 3, 4]);
+    const y = x.square();  // equivalent to tf.square(x)
+    y.print();
+    */
+
+    /* const a = tf.tensor([1, 2, 3, 4]);
+    const b = tf.tensor([10, 20, 30, 40]);
+    const y = a.add(b);  // equivalent to tf.add(a, b)
+    y.print();
+   */
+
+    /*   const a = tf.tensor([[1, 2], [3, 4]]);
+      const y = tf.tidy(() => {
+        const result = a.square().log().neg();
+        console.log(result)
+        return result;
+      });
+      console.log(tf.memory());
+      console.log(tf.getBackend()); */
+
+    /*
+        tf.setBackend('cpu');
+        console.log(tf.getBackend()); 
+    */
+
+    const model = tf.sequential({
+      layers: [
+        tf.layers.dense({ inputShape: [784], units: 32, activation: 'relu' }),
+        tf.layers.dense({ units: 10, activation: 'softmax' }),
+      ]
+    });
+
+    model.weights.forEach(w => {
+      console.log(w.name, w.shape);
+    });
+
+    // model.summary()
+
+    model.compile({
+      optimizer: 'sgd',
+      loss: 'categoricalCrossentropy',
+      metrics: ['accuracy']
+    });
+
+
+    /* // Generate dummy data.
+   const data = tf.randomNormal([100, 784]);
+   const labels = tf.randomUniform([100, 10]);
+
+   function onBatchEnd(batch, logs) {
+     console.log('Accuracy', logs.acc);
+   }
+
+   // Train for 5 epochs with batch size of 32.
+   model.fit(data, labels, {
+      epochs: 5,
+      batchSize: 32,
+      callbacks: { onBatchEnd }
+    }).then(info => {
+      console.log('Final accuracy', info.history.acc);
+    }); */
+
+
+    function* data() {
+      for (let i = 0; i < 100; i++) {
+        // Generate one sample at a time.
+        yield tf.randomNormal([784]);
+      }
+    }
+
+    function* labels() {
+      for (let i = 0; i < 100; i++) {
+        // Generate one sample at a time.
+        yield tf.randomUniform([10]);
+      }
+    }
+
+    const xs = tf.data.generator(data);
+    const ys = tf.data.generator(labels);
+    // We zip the data and labels together, shuffle and batch 32 samples at a time.
+    const ds = tf.data.zip({ xs, ys }).shuffle(100 /* bufferSize */).batch(32);
+
+    // Train the model for 5 epochs.
+    model.fitDataset(ds, { epochs: 5 }).then(info => {
+      console.log('Accuracy', info.history.acc);
+    });
+
+    // Predict 3 random samples.
+    const prediction = model.predict(tf.randomNormal([3, 784]));
+    prediction.print();
+
+
+
+
+
+
+
+
+
+
+  </script>
+</body>
+
+</html>
