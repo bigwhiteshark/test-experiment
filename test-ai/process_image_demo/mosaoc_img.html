@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>给图片添加马赛克 - 初冬</title>
+
+  <style>
+    html,body {
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    .flex {
+      display: flex;
+    }
+    .flex-col {
+      flex-direction: column;
+    }
+    .flex-main {
+      flex: 1 1 auto;
+    }
+    .flex-middle {
+      align-items: center;
+    }
+    .flex-center {
+      justify-content: center;
+    }
+    .flex-middle {
+      align-items: center;
+    }
+
+    #hoverColor,
+    #clickColor {
+      width: 200px;
+      height: 100%;
+      color: #fff;
+      border: 1px solid #eee;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="flex flex-center flex-middle" style="width: 100%; height: 100%;">
+    <div class="flex flex-col">
+      <strong>操作指南：</strong>
+      <ul>
+        <li>1. 点击 Mosaic 将图片打上马赛克</li>
+        <li>2. 点击 Rest 将图片恢复为原图</li>
+        <li>3. 点击 Export 将图片下载到本地</li>
+      </ul>
+
+      <div class="">
+        <canvas id="myCanvas" />
+      </div>
+
+      <button type="button" onclick="renderWithMosaic()"> Mosaic </button>
+      <button type="button" onclick="renderToOrigin()"> Reset </button>
+      <button type="button" onclick="exportImage()"> Export </button>
+    </div>
+  </div>
+
+  <script src="./img_src.js"></script>
+  <script>
+
+    let originImageData;
+    // canvas画布的高斯模糊效果
+    var canvas = document.getElementById('myCanvas');
+    var ctx = canvas.getContext('2d');
+    var img = new Image();
+
+    // 为了方便测试，防止图片请求跨域，此处使用了图片的 base64 url
+    // 这里直接修改图片的路径
+    img.src = imgSrc;
+    // img.src = "./test2.png";
+    img.onload = function () {
+      // 设置canvas的宽高
+      canvas.width = img.width;
+      canvas.height = img.height;
+      // 将图像绘制到canvas上面
+      ctx.drawImage(img, 0, 0, img.width, img.height);
+      // 从画布获取整个图片第数据
+      originImageData = ctx.getImageData(0, 0, img.width, img.height);
+      renderToOrigin();
+    };
+
+    function renderToOrigin () {
+      // 将模糊的图像数据再渲染到画布上面
+      ctx.putImageData(originImageData, 0, 0);
+    }
+
+    function renderWithMosaic() {
+      // 从画布获取整个图片第数据
+      var imgData = ctx.getImageData(0, 0, img.width, img.height);
+      // 将图像数据进行高斯模糊 data.data是一个数组，每四个值代表一个像素点的rgba的值，data.width data.height 分别代表图像数据的宽高
+      var processedImgData = processingImgDataWithMosaic(imgData);
+      // 将模糊的图像数据再渲染到画布上面
+      ctx.putImageData(processedImgData, 0, 0);
+    }
+
+    function exportImage() {
+      var dataUrl = canvas.toDataURL();
+      var a = document.createElement("a"); // 生成一个a元素
+      var event = new MouseEvent("click"); // 创建一个单击事件
+      a.download = "photo"; // 设置图片名称
+      a.href = dataUrl; // 将生成的URL设置为a.href属性
+      a.dispatchEvent(event); // 触发a的单击事件
+    }
+
+    function processingImgDataWithMosaic(imgData) {
+      // 定义为一块的边长是多少(这个图像宽高的整数倍)
+      var size = 8; // 区块中的最小单元大小必须大于1，否则本算法没有意义
+      var totalnum = size * size; // 区块内的像素点，也是区块的大小
+      // z 字循环，下标从 0 开始，所以 i * w + j 就为像素点的其实位置
+      for( var i = 0; i < canvas.height; i += size ) {
+        for( var j = 0; j < canvas.width; j += size ) {
+          // 这块是计算每一块全部的像素值 -- 平均值
+          var totalr = 0 , totalg = 0 , totalb = 0;
+          for( var dx = 0; dx < size; dx ++ ) {
+            for( var dy = 0; dy < size; dy ++ ) {
+              var x = i + dx;
+              var y = j + dy;
+              var p = x*canvas.width + y;
+              totalr += imgData.data[p*4+0];
+              totalg += imgData.data[p*4+1];
+              totalb += imgData.data[p*4+2];
+            }
+          }
+
+          var p = i*canvas.width+j;
+          var resr = totalr / totalnum;
+          var resg = totalg / totalnum;
+          var resb = totalb / totalnum;
+          // 这个快像素的值=它的平均值
+          for( var dx = 0; dx < size; dx ++ ) {
+            for( var dy = 0; dy < size; dy ++ ) {
+              var x = i + dx;
+              var y = j + dy;
+              var p = x*canvas.width + y;
+              imgData.data[p*4+0] = resr;
+              imgData.data[p*4+1] = resg;
+              imgData.data[p*4+2] = resb;
+            }
+          }
+        }
+      }
+      return imgData;
+    }
+  </script>
+
+</body>
+
+</html>

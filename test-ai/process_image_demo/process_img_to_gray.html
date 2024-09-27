@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>致灰图片 - 初冬</title>
+
+  <style>
+    html,body {
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    .flex {
+      display: flex;
+    }
+    .flex-col {
+      flex-direction: column;
+    }
+    .flex-main {
+      flex: 1 1 auto;
+    }
+    .flex-middle {
+      align-items: center;
+    }
+    .flex-center {
+      justify-content: center;
+    }
+    .flex-middle {
+      align-items: center;
+    }
+
+    #hoverColor,
+    #clickColor {
+      width: 200px;
+      height: 100%;
+      color: #fff;
+      border: 1px solid #eee;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="flex flex-center flex-middle" style="width: 100%; height: 100%;">
+    <div class="flex flex-col">
+      <strong>操作指南：</strong>
+      <ul>
+        <li>1. 点击 Gray 将图片致为灰色</li>
+        <li>2. 点击 Rest 将图片恢复为原图</li>
+        <li>3. 点击 Export 将图片下载到本地</li>
+      </ul>
+
+      <div class="">
+        <canvas id="myCanvas" />
+      </div>
+
+      <button type="button" onclick="renderToGray()"> Gray </button>
+      <button type="button" onclick="renderToOrigin()"> Reset </button>
+      <button type="button" onclick="exportImage()"> Export </button>
+    </div>
+  </div>
+
+  <script src="./img_src.js"></script>
+  <script>
+
+    let originImageData;
+    // canvas画布的高斯模糊效果
+    var canvas = document.getElementById('myCanvas');
+    var ctx = canvas.getContext('2d');
+    var img = new Image();
+
+    // 为了方便测试，防止图片请求跨域，此处使用了图片的 base64 url
+    // 这里直接修改图片的路径
+    img.src = imgSrc;
+
+    // 图片加载完成，绘制在 canvas 中
+    img.onload = function () {
+      // 设置canvas的宽高
+      canvas.width = img.width;
+      canvas.height = img.height;
+      // 将图像绘制到canvas上面
+      ctx.drawImage(img, 0, 0, img.width, img.height);
+      // 从画布获取整个图片第数据
+      originImageData = ctx.getImageData(0, 0, img.width, img.height);
+      renderToOrigin();
+    };
+
+    // 获取图片的 ImageData，并进行处理
+    function renderToGray () {
+      // 从画布获取整个图片第数据
+      var imgData = ctx.getImageData(0, 0, img.width, img.height);
+      // 将图像数据进行高斯模糊 data.data是一个数组，每四个值代表一个像素点的rgba的值，data.width data.height 分别代表图像数据的宽高
+      var processedImgData = processingImgDataToGray(imgData);
+      // 将模糊的图像数据再渲染到画布上面
+      ctx.putImageData(processedImgData, 0, 0);
+    }
+
+    function renderToOrigin () {
+      // 将模糊的图像数据再渲染到画布上面
+      ctx.putImageData(originImageData, 0, 0);
+    }
+
+    function exportImage() {
+      var dataUrl = canvas.toDataURL();
+      var a = document.createElement("a"); // 生成一个a元素
+      var event = new MouseEvent("click"); // 创建一个单击事件
+      a.download = "photo"; // 设置图片名称
+      a.href = dataUrl; // 将生成的URL设置为a.href属性
+      a.dispatchEvent(event); // 触发a的单击事件
+    }
+
+    function processingImgDataToGray(imgData) {
+      // 第 n 个像素点
+      for (let n = 0; n < imgData.data.length / 4; n++) {
+        var r = imgData.data[4 * n];
+        var g = imgData.data[4 * n + 1];
+        var b = imgData.data[4 * n + 2];
+        // 灰度 - 图像学家研究出对RGB深浅的最好值
+        var grey = r * 0.3 + g * 0.59 + b * 0.11; // 这个算法是图像学家研究出对RGB深浅的最好值
+        imgData.data[n * 4] = grey;
+        imgData.data[n * 4 + 1] = grey;
+        imgData.data[n * 4 + 2] = grey;
+      }
+      return imgData;
+    }
+  </script>
+
+</body>
+
+</html>
