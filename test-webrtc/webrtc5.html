@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="record">Start Record</button>
+    <video autoplay playsinline id="deskVideo" width="600" height="600"></video>
+</body>
+
+</html>
+<script>
+    window.onload = () => {
+        //得到桌面数据流
+        let localStream;
+        var deskVideo = document.querySelector("#deskVideo");
+        function getDeskStream(stream) {
+
+            localStream = stream;
+            deskVideo.srcObject = stream;
+
+        }
+
+        //抓取桌面
+
+        function shareDesktop() {
+
+            //只有在 PC 下才能抓取桌面
+
+
+            //开始捕获桌面数据
+
+            navigator.mediaDevices.getDisplayMedia({ video: true })
+
+                .then(getDeskStream)
+
+                .catch(handleError);
+
+            return true;
+
+
+
+            return false;
+
+        }
+
+
+        var buffer;
+
+        function handleDataAvailable(e) {
+            if (e && e.data && e.data.size > 0) {
+                buffer.push(e.data);
+            }
+        }
+
+        function startRecord() {
+            //定义一个数组，用于缓存桌面数据，最终将数据存储到文件中
+            buffer = [];
+            var options = {
+                mimeType: 'video/webm;codecs=vp8'
+            }
+            if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+                console.error(`${options.mimeType} is not supported!`);
+                return;
+            }
+
+            try {
+                //创建录制对象，用于将桌面数据录制下来
+                mediaRecorder = new MediaRecorder(localStream, options);
+            } catch (e) {
+                console.error('Failed to create MediaRecorder:', e);
+                return;
+            }
+
+            //当捕获到桌面数据后，该事件触发
+            mediaRecorder.ondataavailable = handleDataAvailable;
+            mediaRecorder.start(10);
+        }
+
+        const btnRecord = document.querySelector('#record')
+        btnRecord.onclick = () => {
+            shareDesktop()
+            startRecord()
+        }
+    }
+
+
+
+</script>

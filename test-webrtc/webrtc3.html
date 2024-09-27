@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Realtime communication with WebRTC</title>
+    <link rel="stylesheet" , href="css/client.css" />
+    <style>
+        .none {
+            -webkit-filter: none;
+        }
+
+        .blur {
+            -webkit-filter: blur(3px);
+        }
+
+        .grayscale {
+            -webkit-filter: grayscale(1);
+        }
+
+        .invert {
+            -webkit-filter: invert(1);
+        }
+
+        .sepia {
+            -webkit-filter: sepia(1);
+        }
+    </style>
+</head>
+
+<body>
+    <select id="filter">
+        <option value="none">None</option>
+        <option value="blur">blur</option>
+        <option value="grayscale">Grayscale</option>
+        <option value="invert">Invert</option>
+        <option value="sepia">sepia</option>
+    </select>
+    <button id="TakePhoto">Take</button>
+    <button id="save">save</button>
+    <canvas id="picture"></canvas>
+    <video autoplay playsinline></video>
+    <script src="js/client1.js"></script>
+</body>
+
+</html>
