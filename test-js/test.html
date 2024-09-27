@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>简单的地图</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta charset="utf-8">
+  <style>
+    html,
+    body,
+    #map-canvas {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+  </style>
+  <script src="./mapData.js"></script>
+  <script src="https://api.map.so.com/js?key=您的密钥"></script>
+  <script>
+    let map;
+    function initialize() {
+      createMap();
+      addMarker();
+      document.getElementById('reload').onclick = function () {
+        createMap()
+        addMarker()
+      }
+    }
+
+    function createMap() {
+      let mapOptions = {
+        zoom: 14,
+        center: new so.maps.LatLng(30.823528722121058, 108.39155811692245)
+      };
+      map = new so.maps.Map(document.getElementById('map-canvas'), mapOptions);
+    }
+
+    function addMarker() {
+      map.clearOverlays()
+
+      let markerClusterer = new so.maps.MarkerCluster({ // 聚合点位
+        map: map,
+        minimumClusterSize: 2
+      })
+
+      let infowindow
+
+
+      for (let i = 0; i < mapData.length; i++) {
+        let position = new so.maps.LatLng(mapData[i].latitude, mapData[i].longitude);
+        let marker = new so.maps.Marker({
+          position: position,
+          map: map
+        });
+        infowindow = new so.maps.InfoWindow({ // 弹窗
+          content: '<div>hello world</div>', // 信息窗口的内容
+          map: map // 信息窗口的显示地图
+        })
+        so.maps.event.addListener(marker, 'click', function () {
+          infowindow.setContent('<div>hello world ' + i + '</div>')
+          infowindow.setPosition(marker);
+          infowindow.open();
+        })
+        markerClusterer.addMarker(marker)
+      }
+
+      markerClusterer.set('handlers', [{
+        eventType: 'click',
+        eventHandler: function (data) {
+          console.log(data)
+        }
+      }])
+      console.log('addMarker')
+    }
+
+    so.maps.event.addDomListener(window, 'load', initialize);
+
+  </script>
+</head>
+
+<body>
+  <button id="reload">重新加载地图</button>
+  <div id="map-canvas"></div>
+</body>
+
+</html>
