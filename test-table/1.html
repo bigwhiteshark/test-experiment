@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="pie.js"></script>
+  <script src="json2table.js">
+
+  </script>
+</head>
+
+<body>
+  <div id="myDOMContainer"></div>
+  <script>
+    const myDOMContainer = document.getElementById("myDOMContainer");
+    var myJSON = JSON.parse(JSON.stringify(pieData));
+    JSON2Table.init(myJSON, myDOMContainer);
+  </script>
+</body>
+
+</html>

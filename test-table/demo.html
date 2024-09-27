@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="pie.js"></script>
+  <script src="bar.js"></script>
+  <script src="line.js"></script>
+  <script src="scatter.js"></script>
+
+  <style>
+    tr,
+    th,
+    td {
+      border: 1px solid #000;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="table"></div>
+  <script>
+    // 饼图转表格
+    function pieToTable(data) {
+      let arrTableHtml = [];
+      let keys = Object.keys(data)
+      arrTableHtml.push('<table>');
+      arrTableHtml.push('<tr>')
+      for (let i = 0; i < keys.length; i++) {
+        arrTableHtml.push('<td>' + keys[i] + '</td>')
+      }
+      arrTableHtml.push('<tr>')
+      arrTableHtml.push('<tr>')
+      for (let i = 0; i < keys.length; i++) {
+        const obj = data[keys[i]]
+        const val = Object.values(obj);
+        arrTableHtml.push('<td>' + val + '</td>')
+      }
+      arrTableHtml.push('<tr>')
+      arrTableHtml.push('</table>');
+      return arrTableHtml.join('')
+    }
+    /* let data = pieData.table_ocr_pipeline[0].content.data;
+    const tableHtml = pieToTable(data) */
+
+
+    function jsonToTable(data) {
+      let tableHtml = [];
+      let thNames = Object.keys(data)
+      tableHtml.push('<table>');
+      tableHtml.push('<tr>')
+      tableHtml.push('<td></td>')
+      for (let i = 0; i < thNames.length; i++) {
+        tableHtml.push('<td>' + thNames[i] + '</td>')
+      }
+      tableHtml.push('<tr>')
+
+      const thHead = data[thNames[0]]
+      const trHeads = Object.keys(thHead)
+
+      for (let i = 0; i < trHeads.length; i++) {
+        tableHtml.push('<tr>')
+        const trHead = trHeads[i]
+        tableHtml.push('<td>' + trHead + '</td>')
+
+        for (let j = 0; j < thNames.length; j++) {
+          const tdCell = data[thNames[j]]
+          tableHtml.push('<td>' + tdCell[trHead] + '</td>')
+        }
+        tableHtml.push('</tr>')
+      }
+      tableHtml.push('</table>');
+      return tableHtml.join('')
+    }
+
+    let data = pieData.table_ocr_pipeline[0].content.data
+    const tableHtml = jsonToTable(data)
+
+
+    document.getElementById('table').innerHTML = tableHtml
+
+  </script>
+</body>
+
+</html>

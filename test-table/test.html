@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="json-to-table.js"></script>
+  <script src="bar.js"></script>
+</head>
+
+<body>
+  <div id="jsonTable"></div>
+  <script>
+    var objectArray = [{
+      "Total": "34",
+      "Version": "1.0.4",
+      "Office": "New York"
+    }, {
+      "Total": "67",
+      "Version": "1.1.0",
+      "Office": "Paris"
+    }];
+
+    var jsonHtmlTable = ConvertJsonToTable(objectArray, 'jsonTable');
+    document.getElementById("jsonTable").innerHTML = (jsonHtmlTable);
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script lang="javascript"
+    src="https://github.com/yetrun/json5-to-table/releases/download/0.1.8/json5-to-table.js"></script>
+  <style>
+    #table {
+      width: 100%;
+    }
+
+    tr,
+    th,
+    td {
+      width: 40px;
+      border: 1px solid #000;
+    }
+  </style>
+  <script src="pie.js"></script>
+  <script src="bar.js"></script>
+  <script src="line.js"></script>
+  <script src="line_schema.js"></script>
+</head>
+
+<body>
+  <div id="table">
+  </div>
+  <script>
+    const {
+      generateTable,
+      generateHTMLTable,
+      generateExcel,
+      parseDataToSchema
+    } = JSON5_TO_TABLE
+
+    /*  const data = [
+       {
+         name: 'Jim',
+         age: 18,
+         courses: [
+           { name: 'Music', duration: '3 hours' },
+           { name: 'Basketball', duration: '2 hours' }
+         ]
+       },
+       {
+         name: 'Lucy',
+         age: 17,
+         courses: [
+           { name: 'Music', duration: '2 hours' },
+           { name: 'Painting', duration: '2 hours and 30 minutes' },
+           { name: 'Yoga', duration: '1 hour and 40 minutes' }
+         ]
+       }
+     ]
+ 
+     const schema = [
+       { title: 'Name', path: 'name' },
+       { title: 'Age', path: 'age' },
+       {
+         title: 'Courses', path: 'courses', props: [
+           { title: 'Course Name', path: 'name' },
+           { title: 'Learning Duration', path: 'duration' }
+         ]
+       }
+     ] */
+
+    /* const pieData = {
+      errcode: 0,
+      errmsg: "",
+      table_ocr_pipeline: [
+        {
+          type: "chart",
+          content: {
+            title: "法国",
+            x_title: " ",
+            y_title: "",
+            data: {
+              印度: { 法国: "5.8%" },
+              日本: { 法国: "7.7%" },
+              英国: { 法国: "4.3%" },
+              德国: { 法国: "41.1%" },
+              中国: { 法国: "21.7%" },
+              美国: { 法国: "32.4%" },
+            },
+          },
+        },
+      ],
+    }; */
+
+
+
+
+    /*  let data = { '印度': { '法国': '5.8%' }, '日本': { '法国': '7.7%' }, '英国': { '法国': '4.3%' }, '德国': { '法国': '41.1%'let '中国': { '法国': '21.7%' }, '美国': { '法国': '32.4%' } }
+  */
+
+    /*  let data = pieData.table_ocr_pipeline[0].content
+ 
+     console.log(data)
+ 
+     let schema = [
+ 
+       {
+         title: '法国', path: 'data', props: [
+           {
+             title: '印度', path: '印度', props: [
+               { title: '', path: '法国' },
+             ]
+           },
+           {
+             title: '日本', path: '日本', props: [
+               { title: '', path: '法国' },
+             ]
+           },
+           {
+             title: '英国', path: '英国', props: [
+               { title: '', path: '法国' },
+             ]
+           },
+           {
+             title: '德国', path: '德国', props: [
+               { title: '', path: '法国' },
+             ]
+           },
+           {
+             title: '中国', path: '中国', props: [
+               { title: '', path: '法国' },
+             ]
+           },
+           {
+             title: '美国', path: '美国', props: [
+               { title: '', path: '法国' },
+             ]
+           },
+         ]
+       }
+     ] */
+
+    let data = lineData.table_ocr_pipeline[0].content
+    let schema = parseDataToSchema(data)
+    //let data = pieData.table_ocr_pipeline[0].content
+    //let schema = parseDataToSchema(data)
+    console.log(schema, JSON.stringify(schema))
+
+
+
+
+
+    const table = generateHTMLTable(data, lineSchema)
+    console.log(table)
+    document.getElementById('table').innerHTML = table
+  </script>
+</body>
+
+</html>
