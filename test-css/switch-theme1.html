@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <title>I'm in the mode</title>
+  <meta charset="utf-8">
+
+  <meta name="description" content="Sometimes I ran…">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Big+Shoulders+Text&display=swap" rel="stylesheet">
+  <script>
+    (function () {
+      var theme = window.localStorage.getItem("theme");
+      if (theme) {
+        document.documentElement.dataset.theme = theme;
+      }
+    }());
+  </script>
+
+  <script>
+    (function () {
+      var mqDark = window.matchMedia('(prefers-color-scheme: dark)');
+      var mqLight = window.matchMedia('(prefers-color-scheme: light)');
+      var theme = window.localStorage.getItem('theme');
+
+      function checkTheme(event) {
+        if (event.matches) {
+          if (event.media.includes('dark')) {
+            document.documentElement.dataset.theme = 'dark';
+          }
+          if (event.media.includes('light')) {
+            document.documentElement.dataset.theme = 'light';
+          }
+        }
+      }
+
+      if (mqDark.matches && !theme) {
+        // don't store in localStorage because it is not a user setting
+        document.documentElement.dataset.theme = 'dark';
+      }
+
+      if (mqLight.matches && !theme) {
+        // don't store in localStorage because it is not a user setting
+        document.documentElement.dataset.theme = 'light';
+      }
+
+      if (!theme) {
+        try {
+          mqDark.addEventListener('change', checkTheme);
+          mqLight.addEventListener('change', checkTheme);
+        } catch (maybeSafari) {
+          try {
+            mqDark.addListener(checkTheme);
+            mqLight.addListener(checkTheme);
+          } catch (dontknow) {
+            // not supported…
+          }
+        }
+      }
+    }());
+  </script>
+  <script>
+    (function () {
+      var theme = window.localStorage.getItem('theme');
+
+      function revokeTheme() {
+        if (!window.confirm('Do you want to stay with that theme?')) {
+          window.localStorage.removeItem('theme');
+          document.documentElement.dataset.theme = null;
+        }
+      }
+
+      if (!theme) {
+        if (window.confirm('This page offers a "dark" theme, you want to try it?')) {
+          window.localStorage.setItem('theme', 'dark');
+          document.documentElement.dataset.theme = 'dark';
+          window.setTimeout(revokeTheme, 3000);
+        } else {
+          window.localStorage.setItem('theme', 'light');
+          document.documentElement.dataset.theme = 'light';
+        }
+      }
+    }())
+  </script>
+  <style>
+    :root {
+      --bg-color: hsla(0, 0%, 90%, 1);
+      --text-color: hsla(0, 0%, 20%, 1);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      width: 100vw;
+      height: 100vh;
+      max-width: 100%;
+      min-height: 100%;
+      display: flex;
+      overflow-x: hidden;
+      margin: 0;
+      align-items: center;
+      justify-content: center;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Big Shoulders Text', cursive;
+      transition: color .2s ease-in, background-color .2s ease-out;
+    }
+
+    .mode::after {
+      content: "light";
+    }
+
+    html[data-theme="dark"] {
+      --bg-color: hsla(0, 0%, 20%, 1);
+      --text-color: hsla(0, 0%, 80%, 1);
+    }
+
+    html[data-theme="dark"] .mode::after {
+      content: "dark";
+    }
+  </style>
+</head>
+
+<body>
+  <section class="hero">
+    <h1>Welcome to the <span class="mode"></span> mode</h1>
+  </section>
+</body>
+
+</html>

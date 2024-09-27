@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    /* Sets the default colors */
+    :root {
+      --background-color: #efefef;
+      --font-color: #444444;
+    }
+
+    /* Changes the values of the CSS variables if the data-theme is "dark" */
+
+    body[data-theme="dark"] {
+      --background-color: #032b43;
+      --font-color: #efefef;
+    }
+
+    /* And this is where the CSS variables are applied */
+
+    body {
+      background-color: var(--background-color);
+      color: var(--font-color);
+      font-size: 1.2em;
+      margin: 40vh auto;
+      text-align: center;
+      -webkit-transition: .4s;
+      transition: .4s;
+      font-family: Helvetica, arial, sans-serif;
+    }
+  </style>
+  <script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        // Get the checkbox element 		
+        let checkbox = document.querySelector("input")
+
+        // Get the body tag	
+        let body = document.querySelector("body")
+
+        // This event handler listens for the checkbox to be checked or unchecked
+        // Then, if the checkbox is checked (event.target.checked == true)
+        // Then apply `data-theme="dark"` to the body tag
+        // Otherwise, remove the attribute
+        checkbox.addEventListener('change', (event) => {
+
+          event.target.checked ? body.setAttribute('data-theme', "dark") : body.removeAttribute("data-theme")
+
+        });
+
+      });
+  </script>
+</head>
+<body>
+  <label>
+    Dark Mode?
+    <input type="checkbox">
+  </label>
+</body>
+</html>
