@@ -1,0 +1,26 @@
+{
+  "name": "test-pnpm",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "build:docs": "turbo build --filter=docs",
+    "build:web": "turbo build --filter=web",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "dev": "turbo dev",
+    "rct": "rm -rf node_modules/.cache/turbo",
+    "rmdist": "turbo rmdist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@9.9.0",
+  "dependencies": {
+    "@repo/ui": "workspace:^",
+    "@repo/utils": "workspace:^"
+  },
+  "devDependencies": {
+    "turbo": "^2.1.1"
+  }
+}
